@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务记录详情 - 中医小儿推拿管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        /* 加载指示器样式 */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+        #loading .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 1rem;
+        }
+        .service-info-card {
+            background-color: #f8f9fa;
+            border-left: 4px solid #0d6efd;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+        .service-info-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .info-group {
+            margin-bottom: 0.5rem;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        .info-value {
+            color: #212529;
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载指示器 -->
+    <div id="loading" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div>加载中...</div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door"></i> 首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer.html">
+                                <i class="bi bi-people"></i> 客户管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="service.html">
+                                <i class="bi bi-clipboard2-pulse"></i> 服务记录
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="membership.html">
+                                <i class="bi bi-credit-card"></i> 会员卡管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">服务记录详情</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a href="service.html" class="btn btn-outline-secondary me-2">
+                            <i class="bi bi-arrow-left"></i> 返回列表
+                        </a>
+                        <a id="editServiceBtn" href="#" class="btn btn-primary me-2">
+                            <i class="bi bi-pencil"></i> 编辑服务记录
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">服务基本信息</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="service-info-card p-3">
+                                            <h6><i class="bi bi-person"></i> 客户信息</h6>
+                                            <div class="info-group">
+                                                <span class="info-label">小孩姓名:</span>
+                                                <span id="childNameDisplay" class="info-value">--</span>
+                                            </div>
+                                            <div class="info-group">
+                                                <span class="info-label">年龄:</span>
+                                                <span id="childAgeDisplay" class="info-value">--</span>
+                                            </div>
+                                            <div class="info-group">
+                                                <span class="info-label">性别:</span>
+                                                <span id="childGenderDisplay" class="info-value">--</span>
+                                            </div>
+                                            <div class="info-group">
+                                                <span class="info-label">家长姓名:</span>
+                                                <span id="parentNameDisplay" class="info-value">--</span>
+                                            </div>
+                                            <div class="info-group">
+                                                <span class="info-label">联系电话:</span>
+                                                <span id="phoneDisplay" class="info-value">--</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="service-info-card p-3">
+                                            <h6><i class="bi bi-clipboard2-pulse"></i> 服务信息</h6>
+                                            <div class="info-group">
+                                                <span class="info-label">服务类型:</span>
+                                                <span id="serviceTypeDisplay" class="info-value">--</span>
+                                            </div>
+                                            <div class="info-group">
+                                                <span class="info-label">服务日期:</span>
+                                                <span id="serviceDateDisplay" class="info-value">--</span>
+                                            </div>
+                                            <div class="info-group">
+                                                <span class="info-label">医师:</span>
+                                                <span id="therapistDisplay" class="info-value">--</span>
+                                            </div>
+                                            <div class="info-group">
+                                                <span class="info-label">服务费用:</span>
+                                                <span id="serviceFeeDisplay" class="info-value">--</span>
+                                            </div>
+                                            <div class="info-group">
+                                                <span class="info-label">支付方式:</span>
+                                                <span id="paymentMethodDisplay" class="info-value">--</span>
+                                            </div>
+                                            <div id="membershipInfoGroup" class="info-group" style="display: none;">
+                                                <span class="info-label">会员卡号:</span>
+                                                <span id="membershipDisplay" class="info-value">--</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <div class="service-info-card p-3">
+                                            <h6><i class="bi bi-journal-medical"></i> 诊疗信息</h6>
+                                            <div class="info-group">
+                                                <span class="info-label">症状描述:</span>
+                                                <div id="symptomsDisplay" class="info-value mt-1 p-2 border rounded">--</div>
+                                            </div>
+                                            <div class="info-group mt-2">
+                                                <span class="info-label">诊断结果:</span>
+                                                <div id="diagnosisDisplay" class="info-value mt-1 p-2 border rounded">--</div>
+                                            </div>
+                                            <div class="info-group mt-2">
+                                                <span class="info-label">推拿治疗:</span>
+                                                <div id="treatmentDisplay" class="info-value mt-1 p-2 border rounded">--</div>
+                                            </div>
+                                            <div class="info-group mt-2">
+                                                <span class="info-label">备注说明:</span>
+                                                <div id="notesDisplay" class="info-value mt-1 p-2 border rounded">--</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap和其他JS库 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 自定义JS -->
+    <script src="js/modules/common/sidebar.js" type="module"></script>
+    <script src="js/modules/service/service-detail.js" type="module"></script>
+</body>
+</html> 

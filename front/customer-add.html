@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增客户 - 中医小儿推拿管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="customer.html">
+                                <i class="bi bi-people me-2"></i>客户档案管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="membership.html">
+                                <i class="bi bi-credit-card me-2"></i>会员办卡系统
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <i class="bi bi-journal-text me-2"></i>服务记录模块
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="bi bi-gear me-2"></i>系统设置
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">新增客户</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a href="customer.html" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-arrow-left-circle me-1"></i> 返回列表
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 客户信息表单 -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form id="customerForm" class="needs-validation" novalidate>
+                            <!-- 表单分步导航 -->
+                            <ul class="nav nav-pills mb-4" id="customerTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="child-tab" data-bs-toggle="pill" data-bs-target="#child-info" type="button" role="tab" aria-controls="child-info" aria-selected="true">
+                                        <i class="bi bi-person me-1"></i> 孩子信息
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="parent-tab" data-bs-toggle="pill" data-bs-target="#parent-info" type="button" role="tab" aria-controls="parent-info" aria-selected="false">
+                                        <i class="bi bi-people me-1"></i> 家长信息
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="constitution-tab" data-bs-toggle="pill" data-bs-target="#constitution-info" type="button" role="tab" aria-controls="constitution-info" aria-selected="false">
+                                        <i class="bi bi-clipboard2-pulse me-1"></i> 体质档案
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="customerTabContent">
+                                <!-- 孩子信息 -->
+                                <div class="tab-pane fade show active" id="child-info" role="tabpanel" aria-labelledby="child-tab">
+                                    <h5 class="card-title mb-3">基本信息</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="childName" class="form-label">孩子姓名 <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="childName" name="childName" required>
+                                            <div class="invalid-feedback">请输入孩子姓名</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">性别</label>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="childGender" id="genderMale" value="male" checked>
+                                                    <label class="form-check-label" for="genderMale">男</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="childGender" id="genderFemale" value="female">
+                                                    <label class="form-check-label" for="genderFemale">女</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="childBirthdate" class="form-label">出生日期</label>
+                                            <input type="date" class="form-control" id="childBirthdate" name="childBirthdate" min="">
+                                            <small class="form-text text-muted">年龄不能超过50岁</small>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="childAge" class="form-label">年龄</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="childAge" name="childAge" min="0" max="50" placeholder="年龄">
+                                                <span class="input-group-text">岁</span>
+                                            </div>
+                                            <small class="form-text text-muted">直接输入年龄将自动计算出生日期</small>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="allergyHistory" class="form-label">过敏史</label>
+                                            <textarea class="form-control" id="allergyHistory" name="allergyHistory" rows="2"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="medicalHistory" class="form-label">既往病史</label>
+                                            <textarea class="form-control" id="medicalHistory" name="medicalHistory" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-secondary" disabled>
+                                            <i class="bi bi-arrow-left me-1"></i> 上一步
+                                        </button>
+                                        <button type="button" class="btn btn-primary" onclick="document.getElementById('parent-tab').click()">
+                                            下一步 <i class="bi bi-arrow-right ms-1"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- 家长信息 -->
+                                <div class="tab-pane fade" id="parent-info" role="tabpanel" aria-labelledby="parent-tab">
+                                    <h5 class="card-title mb-3">家长联系方式</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="parentName" class="form-label">家长姓名 <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="parentName" name="parentName" required>
+                                            <div class="invalid-feedback">请输入家长姓名</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="relationship" class="form-label">与孩子关系</label>
+                                            <select class="form-select" id="relationship" name="relationship">
+                                                <option value="">请选择</option>
+                                                <option value="mother">母亲</option>
+                                                <option value="father">父亲</option>
+                                                <option value="grandparent">祖父母</option>
+                                                <option value="other">其他</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="phone" class="form-label">联系电话 <span class="text-danger">*</span></label>
+                                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                                            <div class="invalid-feedback">请输入有效的联系电话</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="email" class="form-label">电子邮箱</label>
+                                            <input type="email" class="form-control" id="email" name="email">
+                                            <div class="invalid-feedback">请输入有效的电子邮箱</div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="address" class="form-label">家庭住址</label>
+                                            <input type="text" class="form-control" id="address" name="address">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('child-tab').click()">
+                                            <i class="bi bi-arrow-left me-1"></i> 上一步
+                                        </button>
+                                        <button type="button" class="btn btn-primary" onclick="document.getElementById('constitution-tab').click()">
+                                            下一步 <i class="bi bi-arrow-right ms-1"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- 体质档案 -->
+                                <div class="tab-pane fade" id="constitution-info" role="tabpanel" aria-labelledby="constitution-tab">
+                                    <h5 class="card-title mb-3">体质信息与建议</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="constitution" class="form-label">体质类型</label>
+                                            <select class="form-select" id="constitution" name="constitution">
+                                                <option value="">请选择</option>
+                                                <option value="平和质">平和质</option>
+                                                <option value="气虚质">气虚质</option>
+                                                <option value="阳虚质">阳虚质</option>
+                                                <option value="阴虚质">阴虚质</option>
+                                                <option value="痰湿质">痰湿质</option>
+                                                <option value="湿热质">湿热质</option>
+                                                <option value="血瘀质">血瘀质</option>
+                                                <option value="气郁质">气郁质</option>
+                                                <option value="特禀质">特禀质</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="source" class="form-label">获客来源</label>
+                                            <select class="form-select" id="source" name="source">
+                                                <option value="">请选择</option>
+                                                <option value="referral">转介绍</option>
+                                                <option value="advertisement">广告</option>
+                                                <option value="social">社交媒体</option>
+                                                <option value="walk_in">自然进店</option>
+                                                <option value="event">活动获客</option>
+                                                <option value="other">其他</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="mainSymptoms" class="form-label">主要症状</label>
+                                            <textarea class="form-control" id="mainSymptoms" name="mainSymptoms" rows="2" placeholder="请描述患者的主要症状、不适感等"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="familyHistory" class="form-label">家族病史</label>
+                                            <textarea class="form-control" id="familyHistory" name="familyHistory" rows="2"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="notes" class="form-label">备注信息</label>
+                                            <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('parent-tab').click()">
+                                            <i class="bi bi-arrow-left me-1"></i> 上一步
+                                        </button>
+                                        <button type="submit" id="finalSubmitBtn" class="btn btn-success">
+                                            <i class="bi bi-check-circle me-1"></i> 完成
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 表单操作按钮 -->
+                            <div class="row mt-4">
+                                <div class="col-12 text-end">
+                                    <button type="button" id="resetBtn" class="btn btn-outline-secondary me-2">
+                                        <i class="bi bi-arrow-counterclockwise me-1"></i> 重置
+                                    </button>
+                                    <button type="submit" id="submitBtn" class="btn btn-primary">
+                                        <i class="bi bi-check-circle me-1"></i> 提交
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast消息容器 -->
+    <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+    <!-- JS依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+    <script type="module" src="js/modules/customer/customer-add.js"></script>
+    <script>
+        // 设置出生日期最小值（当前日期减去50年）
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const minDate = new Date(today.getFullYear() - 50, today.getMonth(), today.getDate());
+            const formattedMinDate = minDate.toISOString().split('T')[0];
+            document.getElementById('childBirthdate').min = formattedMinDate;
+        });
+    </script>
+</body>
+</html> 

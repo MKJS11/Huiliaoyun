@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增商品 - 中医小儿推拿管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer.html">
+                                <i class="bi bi-people me-2"></i>客户档案管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="membership.html">
+                                <i class="bi bi-credit-card me-2"></i>会员办卡系统
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <i class="bi bi-journal-text me-2"></i>服务记录模块
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="bi bi-gear me-2"></i>系统设置
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">新增商品</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a href="inventory.html" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i> 返回库存列表
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 新增商品表单 -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">商品信息</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="addInventoryForm">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">商品名称 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="category" class="form-label">商品类别 <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="category" name="category" required>
+                                        <option value="">请选择类别...</option>
+                                        <option value="推拿用品">推拿用品</option>
+                                        <option value="艾灸用品">艾灸用品</option>
+                                        <option value="刮痧用品">刮痧用品</option>
+                                        <option value="药品">药品</option>
+                                        <option value="其他">其他</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="specification" class="form-label">规格</label>
+                                    <input type="text" class="form-control" id="specification" name="specification" placeholder="如：10根/盒、100ml/瓶">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="unit" class="form-label">计量单位 <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="unit" name="unit" placeholder="如：盒、瓶、个" required>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="costPrice" class="form-label">成本价 <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">¥</span>
+                                        <input type="number" class="form-control" id="costPrice" name="costPrice" min="0" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="sellingPrice" class="form-label">售价 <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">¥</span>
+                                        <input type="number" class="form-control" id="sellingPrice" name="sellingPrice" min="0" step="0.01" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="stock" class="form-label">初始库存</label>
+                                    <input type="number" class="form-control" id="stock" name="stock" min="0" value="0">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="warningThreshold" class="form-label">预警阈值</label>
+                                    <input type="number" class="form-control" id="warningThreshold" name="warningThreshold" min="0" value="10">
+                                    <div class="form-text">当库存低于此值时将在预警列表中显示</div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="supplier" class="form-label">供应商</label>
+                                    <input type="text" class="form-control" id="supplier" name="supplier">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="description" class="form-label">商品描述</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="button" class="btn btn-outline-secondary me-md-2" id="resetBtn">重置</button>
+                                <button type="submit" class="btn btn-primary">保存商品</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast消息容器 -->
+    <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+    <!-- 加载状态指示器 -->
+    <div id="loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: none; z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+        <div class="spinner-border text-primary mb-3" role="status">
+            <span class="visually-hidden">加载中...</span>
+        </div>
+        <div>加载中，请稍候...</div>
+    </div>
+
+    <!-- JS依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/modules/inventory/inventory-add.js"></script>
+</body>
+</html> 

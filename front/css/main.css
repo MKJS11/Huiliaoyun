@@ -1,0 +1,199 @@
+/* 主样式表 */
+
+/* 侧边栏样式 */
+#sidebar {
+  min-height: 100vh;
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+#sidebar .nav-link {
+  color: #6c757d;
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+#sidebar .nav-link.active {
+  color: #fff;
+  background-color: #007bff;
+}
+
+#sidebar .nav-link:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+#sidebar .nav-link.active:hover {
+  background-color: #007bff;
+}
+
+/* 头部区域样式 */
+.navbar-brand {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-size: 1rem;
+  background-color: rgba(0, 0, 0, .25);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+}
+
+/* 内容区域样式 */
+main {
+  padding-top: 1.5rem;
+}
+
+/* 卡片布局优化 */
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: 0.75rem 1.25rem;
+}
+
+/* 表格样式优化 */
+.table th {
+  border-top: 0;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* 按钮样式微调 */
+.btn-group-sm > .btn, .btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* 表单样式优化 */
+.form-label {
+  font-weight: 500;
+}
+
+/* 时间轴样式 */
+.timeline {
+  position: relative;
+  padding: 20px 0;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 40px;
+  margin-bottom: 30px;
+}
+
+.timeline-item:before {
+  content: "";
+  width: 2px;
+  height: 100%;
+  background-color: #e9ecef;
+  position: absolute;
+  left: 10px;
+  top: 0;
+}
+
+.timeline-item:first-child:before {
+  height: calc(100% - 10px);
+  top: 10px;
+}
+
+.timeline-item:last-child:before {
+  height: 10px;
+}
+
+.timeline-date {
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.timeline-date span {
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+.timeline-date:before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border: 3px solid #007bff;
+  border-radius: 50%;
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.timeline-content {
+  background-color: white;
+  border-radius: 0.25rem;
+  position: relative;
+}
+
+/* 舌苔图片比较样式 */
+.tongue-comparison {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.tongue-item {
+  width: 150px;
+  text-align: center;
+}
+
+.tongue-image {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.tongue-date {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-top: 5px;
+}
+
+/* Toast通知样式 */
+.toast-container {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  z-index: 1050;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  #sidebar {
+    min-height: auto;
+  }
+  
+  .timeline-item {
+    padding-left: 30px;
+  }
+  
+  .timeline-date:before {
+    left: -25px;
+    width: 15px;
+    height: 15px;
+  }
+}
+
+/* 打印样式优化 */
+@media print {
+  #sidebar, .btn, .navbar, footer {
+    display: none !important;
+  }
+  
+  main {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+} 

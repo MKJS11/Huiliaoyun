@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员卡详情 - 中医小儿推拿管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- 添加认证工具脚本 -->
+    <script src="js/utils/auth.js"></script>
+    <script>
+        // 页面加载时检查是否已登录
+        document.addEventListener('DOMContentLoaded', function() {
+            // 使用认证工具检查登录状态
+            authUtils.checkAuth();
+        });
+    </script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer.html">
+                                <i class="bi bi-people me-2"></i>客户档案管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="membership.html">
+                                <i class="bi bi-credit-card me-2"></i>会员办卡系统
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <i class="bi bi-journal-text me-2"></i>服务记录模块
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="bi bi-gear me-2"></i>系统设置
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">会员卡详情</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a href="membership.html" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-arrow-left-circle me-1"></i> 返回列表
+                        </a>
+                        <div class="btn-group ms-2">
+                            <a href="membership-edit.html" id="editCardBtn" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil me-1"></i> 编辑
+                            </a>
+                            <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">更多</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="membership-recharge.html" id="rechargeCardBtn"><i class="bi bi-cash-coin me-2"></i>充值</a></li>
+                                <li><a class="dropdown-item" href="membership-renew.html" id="renewCardBtn"><i class="bi bi-arrow-clockwise me-2"></i>续期</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" id="cancelCardBtn" data-bs-toggle="modal" data-bs-target="#cancelCardModal"><i class="bi bi-x-circle me-2"></i>作废</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 会员卡状态提示 -->
+                <div id="cardStatusAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong><i class="bi bi-check-circle-fill me-2"></i>会员卡状态：有效</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <div class="row mb-4">
+                    <!-- 会员卡基本信息 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0"><i class="bi bi-credit-card-2-front me-2"></i>会员卡信息</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <th style="width: 30%">卡号</th>
+                                                <td id="cardNumber">MK202310001</td>
+                                            </tr>
+                                            <tr>
+                                                <th>卡类型</th>
+                                                <td id="cardType">次卡</td>
+                                            </tr>
+                                            <tr>
+                                                <th>客户姓名</th>
+                                                <td><a href="customer-detail.html" id="customerName">王小明</a></td>
+                                            </tr>
+                                            <tr>
+                                                <th>办卡日期</th>
+                                                <td id="issueDate">2023-10-01</td>
+                                            </tr>
+                                            <tr>
+                                                <th>有效期至</th>
+                                                <td id="expiryDate">2024-10-01</td>
+                                            </tr>
+                                            <tr>
+                                                <th>剩余次数</th>
+                                                <td id="remainingCount">15次</td>
+                                            </tr>
+                                            <tr>
+                                                <th>剩余金额</th>
+                                                <td id="remainingBalance">¥500.00</td>
+                                            </tr>
+                                            <tr>
+                                                <th>状态</th>
+                                                <td id="cardStatus"><span class="badge bg-success">有效</span></td>
+                                            </tr>
+                                            <tr>
+                                                <th>备注</th>
+                                                <td id="cardNotes">儿童感冒推拿套餐卡</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 消费概览 -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0"><i class="bi bi-graph-up me-2"></i>消费概览</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-4">
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <div class="rounded-circle bg-primary p-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                                    <i class="bi bi-calendar-check fs-4 text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-0">最近消费</h6>
+                                                <span id="lastConsumptionDate">2023-10-15</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <div class="rounded-circle bg-success p-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                                    <i class="bi bi-cash fs-4 text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-0">累计消费</h6>
+                                                <span id="totalConsumptionAmount">¥300.00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body px-0 pt-0 pb-2">
+                                    <div class="chart-container" style="position: relative; height: 220px;">
+                                        <canvas id="consumptionChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 消费记录 -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0"><i class="bi bi-list-check me-2"></i>消费记录</h5>
+                        <button type="button" class="btn btn-sm btn-primary" id="addConsumptionBtn">
+                            <i class="bi bi-plus-circle me-1"></i> 添加消费
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="consumptionTable" class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>日期</th>
+                                        <th>消费项目</th>
+                                        <th>医师</th>
+                                        <th>消费金额</th>
+                                        <th>消费次数</th>
+                                        <th>备注</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2023-10-15</td>
+                                        <td>感冒推拿套餐</td>
+                                        <td>张医师</td>
+                                        <td>¥100.00</td>
+                                        <td>1次</td>
+                                        <td>感冒发热</td>
+                                        <td>
+                                            <a href="service-detail.html?id=1" class="btn btn-sm btn-outline-primary">详情</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2023-10-08</td>
+                                        <td>消化不良推拿</td>
+                                        <td>李医师</td>
+                                        <td>¥120.00</td>
+                                        <td>1次</td>
+                                        <td>消化不良</td>
+                                        <td>
+                                            <a href="service-detail.html?id=2" class="btn btn-sm btn-outline-primary">详情</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2023-10-01</td>
+                                        <td>常规保健推拿</td>
+                                        <td>王医师</td>
+                                        <td>¥80.00</td>
+                                        <td>1次</td>
+                                        <td>日常保健</td>
+                                        <td>
+                                            <a href="service-detail.html?id=3" class="btn btn-sm btn-outline-primary">详情</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 充值记录 -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0"><i class="bi bi-cash-coin me-2"></i>充值记录</h5>
+                        <a href="membership-recharge.html" class="btn btn-sm btn-success" id="rechargeBtn">
+                            <i class="bi bi-plus-circle me-1"></i> 充值
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <!-- 添加充值概览 -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="rounded-circle bg-success p-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="bi bi-cash-stack fs-4 text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-0">累计充值</h6>
+                                        <span id="totalRechargeAmount">¥0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="rounded-circle bg-primary p-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="bi bi-123 fs-4 text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-0">累计次数</h6>
+                                        <span id="totalRechargeCount">0次</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="rounded-circle bg-info p-2 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="bi bi-calendar-plus fs-4 text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-0">延长期限</h6>
+                                        <span id="totalExtendMonths">0个月</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="rechargeTable" class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>日期</th>
+                                        <th>充值金额</th>
+                                        <th>充值次数</th>
+                                        <th>有效期延长</th>
+                                        <th>操作人员</th>
+                                        <th>支付方式</th>
+                                        <th>备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2023-10-01</td>
+                                        <td>¥800.00</td>
+                                        <td>20次</td>
+                                        <td>12个月</td>
+                                        <td>张文</td>
+                                        <td>微信支付</td>
+                                        <td>办卡初始充值</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 卡片作废确认对话框 -->
+    <div class="modal fade" id="cancelCardModal" tabindex="-1" aria-labelledby="cancelCardModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelCardModalLabel">确认作废会员卡</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>您确定要作废这张会员卡吗？作废后将无法恢复。
+                    </div>
+                    <div class="mb-3">
+                        <label for="cancelReason" class="form-label">作废原因</label>
+                        <textarea class="form-control" id="cancelReason" rows="3" placeholder="请输入作废原因..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" id="confirmCancelBtn">确认作废</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net@1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js" crossorigin="anonymous"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取会员卡ID
+            const urlParams = new URLSearchParams(window.location.search);
+            const cardId = urlParams.get('id');
+            
+            if (!cardId) {
+                // 显示错误消息
+                document.body.innerHTML = '<div class="container mt-5"><div class="alert alert-danger">未找到会员卡信息，请返回<a href="membership.html">会员卡列表</a>重试。</div></div>';
+                return;
+            }
+            
+            // 更新页面上的链接
+            document.querySelectorAll('#editCardBtn, #rechargeCardBtn, #renewCardBtn').forEach(btn => {
+                const href = btn.getAttribute('href');
+                btn.setAttribute('href', `${href}?id=${cardId}`);
+            });
+            
+            // 初始化数据表格
+            $('#consumptionTable, #rechargeTable').DataTable({
+                language: {
+                    "sProcessing": "处理中...",
+                    "sLengthMenu": "显示 _MENU_ 条",
+                    "sZeroRecords": "没有匹配结果",
+                    "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                    "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                    "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                    "sInfoPostFix": "",
+                    "sSearch": "搜索:",
+                    "sUrl": "",
+                    "sEmptyTable": "暂无数据",
+                    "sLoadingRecords": "载入中...",
+                    "sInfoThousands": ",",
+                    "oPaginate": {
+                        "sFirst": "首页",
+                        "sPrevious": "上页",
+                        "sNext": "下页",
+                        "sLast": "末页"
+                    }
+                },
+                order: [[0, 'desc']] // 按日期降序排序
+            });
+            
+            // 加载会员卡详情数据
+            loadCardDetails(cardId);
+            
+            // 初始化消费记录图表
+            initConsumptionChart();
+            
+            // 绑定作废确认按钮事件
+            document.getElementById('confirmCancelBtn').addEventListener('click', function() {
+                cancelCard(cardId);
+            });
+            
+            // 绑定添加消费按钮事件
+            document.getElementById('addConsumptionBtn').addEventListener('click', function() {
+                window.location.href = `service-add.html?card_id=${cardId}`;
+            });
+        });
+        
+        // 加载会员卡详情
+        async function loadCardDetails(cardId) {
+            try {
+                // 从API获取会员卡详情
+                const response = await fetch(`http://localhost:5201/api/memberships/${cardId}`);
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    // 更新页面上的会员卡信息
+                    updateCardInfo(result.data);
+                    
+                    // 更新卡状态提示
+                    updateCardStatusAlert(result.data.status);
+                    
+                    // 加载消费记录
+                    loadConsumptionHistory(cardId);
+                    
+                    // 加载充值记录
+                    loadRechargeHistory(cardId);
+                } else {
+                    // 显示错误消息
+                    showErrorMessage('获取会员卡详情失败：' + (result.message || '未知错误'));
+                }
+            } catch (error) {
+                console.error('获取会员卡详情出错:', error);
+                showErrorMessage('获取会员卡详情时发生错误，请稍后重试。');
+            }
+        }
+        
+        // 更新会员卡信息
+        function updateCardInfo(card) {
+            // 更新表格信息
+            document.getElementById('cardNumber').textContent = card.cardNumber || '';
+            document.getElementById('cardType').textContent = getCardTypeName(card.cardType) || '';
+            
+            const customerLink = document.getElementById('customerName');
+            customerLink.textContent = card.customer ? (card.customer.childName || '') : '';
+            customerLink.href = `customer-detail.html?id=${card.customer ? card.customer._id : ''}`;
+            
+            document.getElementById('issueDate').textContent = formatDate(card.issueDate) || '';
+            document.getElementById('expiryDate').textContent = formatDate(card.expiryDate) || '';
+            document.getElementById('remainingCount').textContent = (card.count !== undefined ? `${card.count}次` : '不适用');
+            document.getElementById('remainingBalance').textContent = (card.balance !== undefined ? `¥${card.balance.toFixed(2)}` : '¥0.00');
+            
+            // 更新卡状态
+            const statusEl = document.getElementById('cardStatus');
+            let statusHtml = '';
+            
+            switch (card.status) {
+                case 'active':
+                    statusHtml = '<span class="badge bg-success">有效</span>';
+                    break;
+                case 'expired':
+                    statusHtml = '<span class="badge bg-danger">已过期</span>';
+                    break;
+                case 'depleted':
+                    statusHtml = '<span class="badge bg-warning text-dark">次数用完</span>';
+                    break;
+                case 'cancelled':
+                    statusHtml = '<span class="badge bg-secondary">已作废</span>';
+                    break;
+                default:
+                    statusHtml = '<span class="badge bg-secondary">未知</span>';
+            }
+            
+            statusEl.innerHTML = statusHtml;
+            document.getElementById('cardNotes').textContent = card.notes || '';
+        }
+        
+        // 获取卡类型名称
+        function getCardTypeName(cardType) {
+            const typeMap = {
+                'count': '次卡',
+                'value': '储值卡',
+                'period': '期限卡',
+                'mixed': '混合卡'
+            };
+            return typeMap[cardType] || cardType;
+        }
+        
+        // 更新卡状态提示
+        function updateCardStatusAlert(status) {
+            const alertEl = document.getElementById('cardStatusAlert');
+            
+            let alertClass = 'alert-success';
+            let message = '<strong><i class="bi bi-check-circle-fill me-2"></i>会员卡状态：有效</strong>';
+            
+            switch (status) {
+                case 'active':
+                    // 默认值，不需要修改
+                    break;
+                case 'expired':
+                    alertClass = 'alert-danger';
+                    message = '<strong><i class="bi bi-x-circle-fill me-2"></i>会员卡状态：已过期</strong> 请及时为客户办理续期。';
+                    break;
+                case 'depleted':
+                    alertClass = 'alert-warning';
+                    message = '<strong><i class="bi bi-exclamation-triangle-fill me-2"></i>会员卡状态：次数用完</strong> 请及时为客户充值。';
+                    break;
+                case 'cancelled':
+                    alertClass = 'alert-secondary';
+                    message = '<strong><i class="bi bi-slash-circle-fill me-2"></i>会员卡状态：已作废</strong> 此卡已不可使用。';
+                    break;
+            }
+            
+            // 移除所有alert类
+            alertEl.classList.remove('alert-success', 'alert-danger', 'alert-warning', 'alert-secondary');
+            // 添加对应的alert类
+            alertEl.classList.add(alertClass);
+            // 更新内容
+            alertEl.innerHTML = message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+        }
+        
+        // 加载消费记录
+        async function loadConsumptionHistory(cardId) {
+            try {
+                // 从API获取消费记录
+                const response = await fetch(`http://localhost:5201/api/memberships/${cardId}/consumption`);
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    // 更新表格数据
+                    updateConsumptionTable(result.data.records);
+                    
+                    // 更新消费概览数据
+                    updateConsumptionOverview(result.data.records, result.data.summary);
+                    
+                    // 更新消费图表
+                    updateConsumptionChart(result.data.records);
+                }
+            } catch (error) {
+                console.error('获取消费记录出错:', error);
+            }
+        }
+        
+        // 更新消费记录表格
+        function updateConsumptionTable(records) {
+            const table = $('#consumptionTable').DataTable();
+            
+            // 清空表格
+            table.clear();
+            
+            // 添加数据
+            if (records && records.length > 0) {
+                records.forEach(record => {
+                    table.row.add([
+                        formatDate(record.date),
+                        record.serviceName,
+                        record.therapistName || '-',
+                        `¥${record.amount.toFixed(2)}`,
+                        `${record.count}次`,
+                        record.notes || '',
+                        `<a href="javascript:void(0)" class="btn btn-sm btn-outline-primary">详情</a>`
+                    ]);
+                });
+            }
+            
+            // 重绘表格
+            table.draw();
+        }
+        
+        // 更新消费概览
+        function updateConsumptionOverview(records, summary) {
+            if (!records || records.length === 0) {
+                document.getElementById('lastConsumptionDate').textContent = '暂无消费';
+                document.getElementById('totalConsumptionAmount').textContent = '¥0.00';
+                return;
+            }
+            
+            // 按日期排序
+            const sortedRecords = [...records].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // 最近消费日期
+            document.getElementById('lastConsumptionDate').textContent = formatDate(sortedRecords[0].date);
+            
+            // 累计消费金额 - 优先使用API提供的汇总数据
+            const total = summary ? summary.totalAmount : records.reduce((sum, record) => sum + record.amount, 0);
+            document.getElementById('totalConsumptionAmount').textContent = `¥${total.toFixed(2)}`;
+        }
+        
+        // 初始化消费图表
+        function initConsumptionChart() {
+            const ctx = document.getElementById('consumptionChart').getContext('2d');
+            
+            // 创建图表
+            window.consumptionChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: '消费金额(元)',
+                        data: [],
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                        pointBorderColor: '#fff',
+                        pointRadius: 4,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '¥' + value;
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += '¥' + context.parsed.y.toFixed(2);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 更新消费图表
+        function updateConsumptionChart(records) {
+            if (!window.consumptionChart || !records || records.length === 0) return;
+            
+            // 按日期排序
+            const sortedRecords = [...records].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            // 提取日期和金额
+            const labels = sortedRecords.map(record => formatDate(record.date));
+            const data = sortedRecords.map(record => record.amount);
+            
+            // 更新图表数据
+            window.consumptionChart.data.labels = labels;
+            window.consumptionChart.data.datasets[0].data = data;
+            
+            // 更新图表
+            window.consumptionChart.update();
+        }
+        
+        // 加载充值记录
+        async function loadRechargeHistory(cardId) {
+            try {
+                // 从API获取充值记录
+                const response = await fetch(`http://localhost:5201/api/memberships/${cardId}/recharge`);
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    // 更新表格数据
+                    updateRechargeTable(result.data.records || result.data);
+                    
+                    // 如果有汇总数据，可以在这里处理
+                    if (result.data.summary) {
+                        // 可以添加显示汇总数据的代码
+                        updateRechargeSummary(result.data.summary);
+                    }
+                }
+            } catch (error) {
+                console.error('获取充值记录出错:', error);
+            }
+        }
+        
+        // 更新充值记录表格
+        function updateRechargeTable(records) {
+            const table = $('#rechargeTable').DataTable();
+            
+            // 清空表格
+            table.clear();
+            
+            // 添加数据
+            if (records && records.length > 0) {
+                records.forEach(record => {
+                    table.row.add([
+                        formatDate(record.date),
+                        `¥${record.amount.toFixed(2)}`,
+                        `${record.count || 0}次`,
+                        record.extendDuration ? `${record.extendDuration}个月` : '无',
+                        record.operatorName,
+                        record.paymentMethod,
+                        record.notes || ''
+                    ]);
+                });
+            }
+            
+            // 重绘表格
+            table.draw();
+        }
+        
+        // 更新充值汇总信息
+        function updateRechargeSummary(summary) {
+            if (summary) {
+                // 更新累计充值金额
+                if (document.getElementById('totalRechargeAmount')) {
+                    document.getElementById('totalRechargeAmount').textContent = `¥${summary.totalAmount.toFixed(2)}`;
+                }
+                
+                // 更新累计充值次数
+                if (document.getElementById('totalRechargeCount')) {
+                    document.getElementById('totalRechargeCount').textContent = `${summary.totalCount || 0}次`;
+                }
+                
+                // 更新累计延长月数
+                if (document.getElementById('totalExtendMonths')) {
+                    document.getElementById('totalExtendMonths').textContent = `${summary.totalExtendMonths || 0}个月`;
+                }
+            }
+        }
+        
+        // 作废会员卡
+        async function cancelCard(cardId) {
+            const reason = document.getElementById('cancelReason').value.trim();
+            
+            if (!reason) {
+                alert('请输入作废原因');
+                return;
+            }
+            
+            try {
+                // 调用API作废会员卡
+                const response = await fetch(`http://localhost:5201/api/memberships/${cardId}/cancel`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    },
+                    body: JSON.stringify({ reason })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 关闭模态框
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('cancelCardModal'));
+                    modal.hide();
+                    
+                    // 显示成功消息
+                    alert('会员卡已成功作废');
+                    
+                    // 重新加载页面
+                    location.reload();
+                } else {
+                    alert('作废会员卡失败：' + (result.message || '未知错误'));
+                }
+            } catch (error) {
+                console.error('作废会员卡出错:', error);
+                alert('作废会员卡时发生错误，请稍后重试');
+            }
+        }
+        
+        // 显示错误消息
+        function showErrorMessage(message) {
+            const alertHtml = `
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            
+            document.querySelector('main').insertAdjacentHTML('afterbegin', alertHtml);
+        }
+        
+        // 格式化日期
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+        }
+    </script>
+</body>
+</html> 

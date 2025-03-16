@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>办理会员卡 - 中医小儿推拿管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer.html">
+                                <i class="bi bi-people me-2"></i>客户档案管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="membership.html">
+                                <i class="bi bi-credit-card me-2"></i>会员办卡系统
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <i class="bi bi-journal-text me-2"></i>服务记录模块
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="bi bi-gear me-2"></i>系统设置
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">办理会员卡</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a href="membership.html" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-arrow-left-circle me-1"></i> 返回列表
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 会员卡办理表单 -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form id="membershipForm">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h5 class="card-title mb-3">客户信息</h5>
+                                    <div class="mb-3">
+                                        <label for="customerSelect" class="form-label">选择客户</label>
+                                        <div class="input-group">
+                                            <select class="form-select" id="customerSelect" name="customerSelect" required data-required>
+                                                <option value="" selected disabled>请选择客户...</option>
+                                            </select>
+                                            <button class="btn btn-outline-secondary" type="button" id="searchCustomerBtn">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">家长</label>
+                                        <input type="text" class="form-control" id="parentName" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">联系电话</label>
+                                        <input type="text" class="form-control" id="contactPhone" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="card-title mb-3">会员卡设置</h5>
+                                    <div class="mb-3">
+                                        <label for="membershipTypeSelect" class="form-label"><strong>选择会员卡套餐</strong></label>
+                                        <select class="form-select form-select-lg mb-2" id="membershipTypeSelect" name="membershipTypeSelect" required>
+                                            <option value="" selected disabled>请选择会员卡套餐...</option>
+                                        </select>
+                                        <div class="form-text">请选择系统预设的会员卡套餐</div>
+                                    </div>
+                                    
+                                    <div id="manualSettingsToggle" class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="showManualSettings">
+                                            <label class="form-check-label" for="showManualSettings">显示手动设置选项</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="manualSettingsContainer" style="display: none;">
+                                        <div class="mb-3">
+                                            <label for="cardType" class="form-label">卡类型</label>
+                                            <select class="form-select" id="cardType" name="cardType" required data-required>
+                                                <option value="" selected disabled>请选择卡类型...</option>
+                                                <option value="count">次卡（按次数）</option>
+                                                <option value="period">期限卡（按时间）</option>
+                                                <option value="mixed">混合卡（次数+时间）</option>
+                                                <option value="value">储值卡（充值金额）</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- 次卡字段 -->
+                                        <div class="mb-3 card-type-field card-count-field d-none">
+                                            <label for="cardCount" class="form-label">卡次数</label>
+                                            <input type="number" class="form-control" id="cardCount" name="cardCount" min="1" data-required>
+                                            <div class="form-text">设置会员卡可使用的次数</div>
+                                        </div>
+                                        
+                                        <div class="mb-3 card-type-field card-count-field d-none">
+                                            <label for="unitPrice" class="form-label">单次价格</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">¥</span>
+                                                <input type="number" class="form-control" id="unitPrice" name="unitPrice" min="0" step="0.01" data-required>
+                                            </div>
+                                            <div class="form-text">设置每次服务的单价</div>
+                                        </div>
+                                        
+                                        <!-- 期限卡字段 -->
+                                        <div class="mb-3 card-type-field card-period-field d-none">
+                                            <label for="periodValue" class="form-label">有效期</label>
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" id="periodValue" name="periodValue" min="1" data-required>
+                                                <select class="form-select" id="periodType" name="periodType" data-required>
+                                                    <option value="day">天</option>
+                                                    <option value="week">周</option>
+                                                    <option value="month" selected>月</option>
+                                                    <option value="year">年</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-text">设置会员卡有效期</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 通用字段 -->
+                                    <div class="mb-3">
+                                        <label for="expiryDate" class="form-label">到期日期</label>
+                                        <input type="date" class="form-control" id="expiryDate" name="expiryDate" required data-required readonly>
+                                        <div class="form-text">会员卡到期日期（自动计算）</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h5 class="card-title mb-3">付款信息</h5>
+                                    <div class="mb-3">
+                                        <label for="initialAmount" class="form-label">充值金额</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">¥</span>
+                                            <input type="number" class="form-control" id="initialAmount" name="initialAmount" min="0" step="0.01">
+                                        </div>
+                                        <div class="form-text">会员卡初始充值金额</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="bonusAmount" class="form-label">赠送金额</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">¥</span>
+                                            <input type="number" class="form-control" id="bonusAmount" name="bonusAmount" min="0" step="0.01" readonly>
+                                        </div>
+                                        <div class="form-text">充值满额赠送金额（自动计算）</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="paymentMethod" class="form-label">支付方式</label>
+                                        <select class="form-select" id="paymentMethod" name="paymentMethod">
+                                            <option value="cash" selected>现金</option>
+                                            <option value="wechat">微信支付</option>
+                                            <option value="alipay">支付宝</option>
+                                            <option value="card">银行卡</option>
+                                            <option value="other">其他方式</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="card-title mb-3">其他信息</h5>
+                                    <div class="mb-3">
+                                        <label for="notes" class="form-label">备注说明</label>
+                                        <textarea class="form-control" id="notes" name="notes" rows="5"></textarea>
+                                        <div class="form-text">其他需要记录的信息</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="bi bi-check-circle me-1"></i> 确认办卡
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="cancelBtn">
+                                    <i class="bi bi-x-circle me-1"></i> 取消
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 加载状态指示器 -->
+    <div id="loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: none; z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+        <div class="spinner-border text-primary mb-3" role="status">
+            <span class="visually-hidden">加载中...</span>
+        </div>
+        <div>加载中，请稍候...</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+    <script src="js/main.js"></script>
+    <script type="module" src="js/modules/membership/membership-add.js"></script>
+</body>
+</html> 

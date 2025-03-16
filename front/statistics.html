@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>统计与数据分析 - 中医小儿推拿管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer.html">
+                                <i class="bi bi-people me-2"></i>客户档案管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="membership.html">
+                                <i class="bi bi-credit-card me-2"></i>会员办卡系统
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <i class="bi bi-journal-text me-2"></i>服务记录模块
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="bi bi-gear me-2"></i>系统设置
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">统计与数据分析</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="input-group me-2">
+                            <input type="text" class="form-control form-control-sm" id="dateRangePicker" placeholder="选择日期范围">
+                            <button class="btn btn-sm btn-outline-secondary" type="button" id="applyDateBtn">应用</button>
+                        </div>
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary active">本月</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">上月</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">本季度</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">本年</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-download me-1"></i> 导出
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">导出Excel</a></li>
+                            <li><a class="dropdown-item" href="#">导出PDF</a></li>
+                            <li><a class="dropdown-item" href="#">导出图表</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 数据概览 -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-primary h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-people fs-2 text-primary me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">本月服务人次</div>
+                                        <div class="h5 mb-0 font-weight-bold">285</div>
+                                        <div class="text-xs text-success">↑12.8% 环比</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-success h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-graph-up fs-2 text-success me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">本月总收入</div>
+                                        <div class="h5 mb-0 font-weight-bold">￥34,580</div>
+                                        <div class="text-xs text-success">↑8.5% 环比</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-info h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-credit-card fs-2 text-info me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">本月新增会员</div>
+                                        <div class="h5 mb-0 font-weight-bold">15</div>
+                                        <div class="text-xs text-success">↑25% 环比</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-warning h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-star-half fs-2 text-warning me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">平均客户评分</div>
+                                        <div class="h5 mb-0 font-weight-bold">4.8 <small>/5</small></div>
+                                        <div class="text-xs text-success">↑0.2 环比</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 营收分析 -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold">营收趋势分析</h6>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="revenueFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                按月查看
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="revenueFilterDropdown">
+                                <li><a class="dropdown-item" href="#">按日查看</a></li>
+                                <li><a class="dropdown-item" href="#">按周查看</a></li>
+                                <li><a class="dropdown-item active" href="#">按月查看</a></li>
+                                <li><a class="dropdown-item" href="#">按季度查看</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="revenueChart" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- 收入构成分析 -->
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold">收入构成分析</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="incomeCompositionChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold">会员卡收入分析</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="cardRevenueChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 推拿师绩效 -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold">推拿师绩效分析</h6>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="therapistFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                按服务人次
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="therapistFilterDropdown">
+                                <li><a class="dropdown-item active" href="#">按服务人次</a></li>
+                                <li><a class="dropdown-item" href="#">按服务时长</a></li>
+                                <li><a class="dropdown-item" href="#">按营收贡献</a></li>
+                                <li><a class="dropdown-item" href="#">按客户评分</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="therapistTable">
+                                <thead>
+                                    <tr>
+                                        <th>推拿师</th>
+                                        <th>服务人次</th>
+                                        <th>服务时长(小时)</th>
+                                        <th>营收贡献</th>
+                                        <th>平均评分</th>
+                                        <th>好评率</th>
+                                        <th>环比变化</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>张医师</td>
+                                        <td>85</td>
+                                        <td>56.7</td>
+                                        <td>￥10,200</td>
+                                        <td>4.9</td>
+                                        <td>98%</td>
+                                        <td><span class="text-success">↑15%</span></td>
+                                        <td>
+                                            <a href="therapist-detail.html?id=1" class="btn btn-sm btn-outline-primary">详情</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>李医师</td>
+                                        <td>75</td>
+                                        <td>50.0</td>
+                                        <td>￥9,000</td>
+                                        <td>4.8</td>
+                                        <td>95%</td>
+                                        <td><span class="text-success">↑8%</span></td>
+                                        <td>
+                                            <a href="therapist-detail.html?id=2" class="btn btn-sm btn-outline-primary">详情</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>王医师</td>
+                                        <td>60</td>
+                                        <td>40.0</td>
+                                        <td>￥7,200</td>
+                                        <td>4.7</td>
+                                        <td>94%</td>
+                                        <td><span class="text-success">↑12%</span></td>
+                                        <td>
+                                            <a href="therapist-detail.html?id=3" class="btn btn-sm btn-outline-primary">详情</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>刘医师</td>
+                                        <td>40</td>
+                                        <td>26.7</td>
+                                        <td>￥4,800</td>
+                                        <td>4.5</td>
+                                        <td>90%</td>
+                                        <td><span class="text-danger">↓5%</span></td>
+                                        <td>
+                                            <a href="therapist-detail.html?id=4" class="btn btn-sm btn-outline-primary">详情</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>陈医师</td>
+                                        <td>25</td>
+                                        <td>16.7</td>
+                                        <td>￥3,000</td>
+                                        <td>4.6</td>
+                                        <td>92%</td>
+                                        <td><span class="text-success">↑20%</span></td>
+                                        <td>
+                                            <a href="therapist-detail.html?id=5" class="btn btn-sm btn-outline-primary">详情</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 客户分析 -->
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold">客户活跃度分析</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="customerActivityChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="m-0 font-weight-bold">客户体质分布</h6>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="showPercentageSwitch" checked>
+                                    <label class="form-check-label" for="showPercentageSwitch">显示百分比</label>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="customerConstitutionChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 客户未到店预警 -->
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold"><i class="bi bi-exclamation-triangle me-2"></i>客户未到店预警 (超过30天)</h6>
+                        <button class="btn btn-sm btn-dark">一键发送提醒</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover" id="inactiveCustomersTable">
+                                <thead>
+                                    <tr>
+                                        <th>客户姓名</th>
+                                        <th>年龄</th>
+                                        <th>联系人</th>
+                                        <th>联系电话</th>
+                                        <th>最后到店日期</th>
+                                        <th>会员卡状态</th>
+                                        <th>未到店天数</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="customer-detail.html?id=6">赵小雨</a></td>
+                                        <td>3岁</td>
+                                        <td>赵先生</td>
+                                        <td>139****5678</td>
+                                        <td>2023-01-20</td>
+                                        <td><span class="badge bg-success">有效</span></td>
+                                        <td>47天</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-telephone"></i> 致电</button>
+                                            <button class="btn btn-sm btn-outline-success"><i class="bi bi-chat-dots"></i> 短信</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="customer-detail.html?id=7">张小强</a></td>
+                                        <td>5岁</td>
+                                        <td>张女士</td>
+                                        <td>137****1234</td>
+                                        <td>2023-01-25</td>
+                                        <td><span class="badge bg-success">有效</span></td>
+                                        <td>42天</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-telephone"></i> 致电</button>
+                                            <button class="btn btn-sm btn-outline-success"><i class="bi bi-chat-dots"></i> 短信</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="customer-detail.html?id=8">李小宝</a></td>
+                                        <td>2岁</td>
+                                        <td>李先生</td>
+                                        <td>136****5678</td>
+                                        <td>2023-01-28</td>
+                                        <td><span class="badge bg-warning text-dark">即将到期</span></td>
+                                        <td>39天</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-telephone"></i> 致电</button>
+                                            <button class="btn btn-sm btn-outline-success"><i class="bi bi-chat-dots"></i> 短信</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="customer-detail.html?id=9">王小虎</a></td>
+                                        <td>4岁</td>
+                                        <td>王女士</td>
+                                        <td>135****9012</td>
+                                        <td>2023-01-30</td>
+                                        <td><span class="badge bg-success">有效</span></td>
+                                        <td>37天</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-telephone"></i> 致电</button>
+                                            <button class="btn btn-sm btn-outline-success"><i class="bi bi-chat-dots"></i> 短信</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="customer-detail.html?id=10">陈小鱼</a></td>
+                                        <td>3岁</td>
+                                        <td>陈先生</td>
+                                        <td>134****5678</td>
+                                        <td>2023-02-01</td>
+                                        <td><span class="badge bg-danger">已过期</span></td>
+                                        <td>35天</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary"><i class="bi bi-telephone"></i> 致电</button>
+                                            <button class="btn btn-sm btn-outline-success"><i class="bi bi-chat-dots"></i> 短信</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="customer-inactive.html" class="text-decoration-none">查看所有未到店客户 <i class="bi bi-arrow-right-short"></i></a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 加载状态 -->
+    <div id="loading" class="loading-overlay" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">加载中...</span>
+        </div>
+        <div class="mt-2">正在加载数据...</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh.js"></script>
+    <script src="js/main.js"></script>
+    <script type="module" src="js/modules/statistics/statistics.js"></script>
+</body>
+</html> 

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客户详情 - 中医小儿推拿管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.6/css/dataTables.bootstrap5.min.css">
+    <style>
+        .timeline-item {
+            border-left: 2px solid #0d6efd;
+            padding-left: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .timeline-item:before {
+            content: '';
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #0d6efd;
+            position: absolute;
+            left: -8px;
+            top: 0;
+        }
+        .tongue-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="customer.html">
+                                <i class="bi bi-people me-2"></i>客户档案管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="membership.html">
+                                <i class="bi bi-credit-card me-2"></i>会员办卡系统
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <i class="bi bi-journal-text me-2"></i>服务记录模块
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="bi bi-gear me-2"></i>系统设置
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">客户详情</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a href="customer.html" class="btn btn-sm btn-outline-secondary me-2">
+                            <i class="bi bi-arrow-left-circle me-1"></i> 返回列表
+                        </a>
+                        <a href="#" id="addServiceBtn" class="btn btn-sm btn-primary me-2">
+                            <i class="bi bi-person-plus-fill me-1"></i> 添加服务
+                        </a>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear me-1"></i> 操作
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-printer me-2"></i> 打印信息</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-download me-2"></i> 导出档案</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteCustomerModal"><i class="bi bi-trash me-2"></i> 删除客户</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 加载提示 -->
+                <div id="loadingIndicator" class="text-center my-5 d-none">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">加载中...</span>
+                    </div>
+                    <p class="mt-2 text-primary" id="loadingText">加载中...</p>
+                </div>
+                
+                <!-- 错误提示 -->
+                <div id="errorMessage" class="alert alert-danger d-none" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <span id="errorText">加载失败</span>
+                </div>
+
+                <!-- 客户信息容器 -->
+                <div id="customerInfo"></div>
+
+                <!-- 标签页导航 -->
+                <ul class="nav nav-tabs mb-4" id="customerTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="service-tab" data-bs-toggle="tab" data-bs-target="#service" type="button" role="tab" aria-controls="service" aria-selected="true">
+                            <i class="bi bi-journal-text me-1"></i> 服务记录
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="consumption-tab" data-bs-toggle="tab" data-bs-target="#consumption" type="button" role="tab" aria-controls="consumption" aria-selected="false">
+                            <i class="bi bi-credit-card me-1"></i> 会员卡与消费
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="notes-tab" data-bs-toggle="tab" data-bs-target="#notes" type="button" role="tab" aria-controls="notes" aria-selected="false">
+                            <i class="bi bi-clipboard-data me-1"></i> 评估记录
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tongue-tab" data-bs-toggle="tab" data-bs-target="#tongue" type="button" role="tab" aria-controls="tongue" aria-selected="false">
+                            <i class="bi bi-image me-1"></i> 舌苔记录
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- 标签页内容 -->
+                <div class="tab-content" id="customerTabContent">
+                    <!-- 服务记录 -->
+                    <div class="tab-pane fade show active" id="service" role="tabpanel" aria-labelledby="service-tab">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">服务记录历史</h5>
+                                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+                                    <i class="bi bi-plus-circle me-1"></i> 新增服务
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="serviceHistory" class="table-responsive">
+                                    <p class="text-center text-muted my-5">加载服务记录中...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 会员卡与消费 -->
+                    <div class="tab-pane fade" id="consumption" role="tabpanel" aria-labelledby="consumption-tab">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">会员卡信息</h5>
+                                <a href="" class="btn btn-sm btn-primary" id="addMembershipBtn">
+                                    <i class="bi bi-plus-circle me-1"></i> 办理会员卡
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                <div id="membershipHistory" class="table-responsive">
+                                    <!-- 加载提示，只在加载过程中显示 -->
+                                    <div id="membershipLoading" class="text-center my-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">加载中...</span>
+                                        </div>
+                                        <p class="mt-2 text-primary">正在加载会员信息...</p>
+                                    </div>
+                                    
+                                    <!-- 无会员卡提示，只在无会员卡时显示 -->
+                                    <div id="noMembership" class="alert alert-info text-center my-4 d-none">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        该客户暂未办理会员卡，点击右上角"办理会员卡"按钮进行办理。
+                                    </div>
+                                    
+                                    <!-- 会员卡列表 -->
+                                    <table id="membershipTable" class="table table-striped table-hover d-none">
+                                        <thead>
+                                            <tr>
+                                                <th>会员卡号</th>
+                                                <th>卡类型</th>
+                                                <th>余额</th>
+                                                <th>状态</th>
+                                                <th>办理日期</th>
+                                                <th>到期日期</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- 会员卡数据将由JavaScript动态加载 -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 消费记录 -->
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">消费记录</h5>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-secondary" id="refreshConsumptionBtn">
+                                        <i class="bi bi-arrow-clockwise me-1"></i> 刷新
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="consumptionHistory" class="table-responsive">
+                                    <!-- 加载提示，只在加载过程中显示 -->
+                                    <div id="consumptionLoading" class="text-center my-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">加载中...</span>
+                                        </div>
+                                        <p class="mt-2 text-primary">正在加载消费记录...</p>
+                                    </div>
+                                    
+                                    <!-- 无消费记录提示，只在无消费记录时显示 -->
+                                    <div id="noConsumption" class="alert alert-info text-center my-4 d-none">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        该客户暂无消费记录。
+                                    </div>
+                                    
+                                    <!-- 消费记录表格 -->
+                                    <table id="consumptionTable" class="table table-striped table-hover d-none">
+                                        <thead>
+                                            <tr>
+                                                <th>消费日期</th>
+                                                <th>服务项目</th>
+                                                <th>消费金额</th>
+                                                <th>支付方式</th>
+                                                <th>服务医师</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- 消费记录数据将由JavaScript动态加载 -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 评估记录 -->
+                    <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">体质评估记录</h5>
+                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addNoteModal">
+                                    <i class="bi bi-plus-circle me-1"></i> 添加评估
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="notesList">
+                                    <p class="text-center text-muted my-5">该客户暂无评估记录</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 舌苔记录 -->
+                    <div class="tab-pane fade" id="tongue" role="tabpanel" aria-labelledby="tongue-tab">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">舌苔照片记录</h5>
+                                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addTongueModal">
+                                    <i class="bi bi-plus-circle me-1"></i> 添加舌苔照片
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="tongueImagesList" class="row">
+                                    <p class="text-center text-muted my-5">该客户暂无舌苔照片记录</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast消息容器 -->
+    <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+    <!-- 编辑客户信息模态框 -->
+    <div class="modal fade" id="editCustomerModal" tabindex="-1" aria-labelledby="editCustomerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCustomerModalLabel">编辑客户信息</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCustomerForm">
+                        <!-- 基本信息 -->
+                        <h6 class="mb-3">孩子基本信息</h6>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editChildName" class="form-label">孩子姓名</label>
+                                <input type="text" class="form-control" id="editChildName" name="childName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">性别</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="childGender" id="editGenderMale" value="male">
+                                        <label class="form-check-label" for="editGenderMale">男</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="childGender" id="editGenderFemale" value="female">
+                                        <label class="form-check-label" for="editGenderFemale">女</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editChildBirthdate" class="form-label">出生日期</label>
+                                <input type="date" class="form-control" id="editChildBirthdate" name="childBirthdate">
+                                <small class="form-text text-muted">年龄不能超过50岁</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editChildAge" class="form-label">年龄</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="editChildAge" name="childAge" min="0" max="50">
+                                    <span class="input-group-text">岁</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 家长信息 -->
+                        <h6 class="mb-3 mt-4">家长联系方式</h6>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editParentName" class="form-label">家长姓名</label>
+                                <input type="text" class="form-control" id="editParentName" name="parentName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editRelationship" class="form-label">与孩子关系</label>
+                                <select class="form-select" id="editRelationship" name="relationship">
+                                    <option value="">请选择</option>
+                                    <option value="mother">母亲</option>
+                                    <option value="father">父亲</option>
+                                    <option value="grandparent">祖父母</option>
+                                    <option value="other">其他</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editPhone" class="form-label">联系电话</label>
+                                <input type="tel" class="form-control" id="editPhone" name="phone" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editEmail" class="form-label">电子邮箱</label>
+                                <input type="email" class="form-control" id="editEmail" name="email">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="editAddress" class="form-label">家庭住址</label>
+                                <input type="text" class="form-control" id="editAddress" name="address">
+                            </div>
+                        </div>
+                        
+                        <!-- 体质信息 -->
+                        <h6 class="mb-3 mt-4">体质与健康信息</h6>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="editConstitution" class="form-label">体质类型</label>
+                                <select class="form-select" id="editConstitution" name="constitution">
+                                    <option value="">请选择</option>
+                                    <option value="平和质">平和质</option>
+                                    <option value="气虚质">气虚质</option>
+                                    <option value="阳虚质">阳虚质</option>
+                                    <option value="阴虚质">阴虚质</option>
+                                    <option value="痰湿质">痰湿质</option>
+                                    <option value="湿热质">湿热质</option>
+                                    <option value="血瘀质">血瘀质</option>
+                                    <option value="气郁质">气郁质</option>
+                                    <option value="特禀质">特禀质</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editSource" class="form-label">获客来源</label>
+                                <select class="form-select" id="editSource" name="source">
+                                    <option value="">请选择</option>
+                                    <option value="referral">转介绍</option>
+                                    <option value="advertisement">广告</option>
+                                    <option value="social">社交媒体</option>
+                                    <option value="walk_in">自然进店</option>
+                                    <option value="event">活动获客</option>
+                                    <option value="other">其他</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="editMainSymptoms" class="form-label">主要症状</label>
+                                <textarea class="form-control" id="editMainSymptoms" name="mainSymptoms" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="editAllergyHistory" class="form-label">过敏史</label>
+                                <textarea class="form-control" id="editAllergyHistory" name="allergyHistory" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="editFamilyHistory" class="form-label">家族病史</label>
+                                <textarea class="form-control" id="editFamilyHistory" name="familyHistory" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="editMedicalHistory" class="form-label">既往病史</label>
+                                <textarea class="form-control" id="editMedicalHistory" name="medicalHistory" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="editNotes" class="form-label">备注信息</label>
+                                <textarea class="form-control" id="editNotes" name="notes" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveCustomerBtn">保存更改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除客户确认模态框 -->
+    <div class="modal fade" id="deleteCustomerModal" tabindex="-1" aria-labelledby="deleteCustomerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteCustomerModalLabel">确认删除客户</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>您确定要删除客户 <span class="customer-name fw-bold"></span> 吗？</p>
+                    <p class="text-danger">此操作不可逆！删除后将同时移除该客户的所有服务记录和会员信息。</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">确认删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net@1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        // 设置DataTables全局中文语言
+        $.extend(true, $.fn.dataTable.defaults, {
+            language: {
+                "processing": "处理中...",
+                "lengthMenu": "显示 _MENU_ 项结果",
+                "zeroRecords": "没有匹配结果",
+                "info": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "infoEmpty": "显示第 0 至 0 项结果，共 0 项",
+                "infoFiltered": "(由 _MAX_ 项结果过滤)",
+                "search": "搜索:",
+                "emptyTable": "表中数据为空",
+                "paginate": {
+                    "first": "首页",
+                    "previous": "上一页",
+                    "next": "下一页",
+                    "last": "末页"
+                },
+                "aria": {
+                    "sortAscending": ": 以升序排列此列",
+                    "sortDescending": ": 以降序排列此列"
+                }
+            }
+        });
+    </script>
+    <script type="module" src="js/modules/customer/customer-detail.js"></script>
+</body>
+</html> 

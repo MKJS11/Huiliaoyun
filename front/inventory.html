@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>库存管理 - 中医小儿推拿管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer.html">
+                                <i class="bi bi-people me-2"></i>客户档案管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="membership.html">
+                                <i class="bi bi-credit-card me-2"></i>会员办卡系统
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <i class="bi bi-journal-text me-2"></i>服务记录模块
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="bi bi-gear me-2"></i>系统设置
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">库存管理</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a href="inventory-add.html" class="btn btn-sm btn-primary me-2">
+                            <i class="bi bi-plus-circle me-1"></i> 新增商品
+                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-file-earmark-text me-1"></i> 导出
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">导出当前库存</a></li>
+                            <li><a class="dropdown-item" href="#">导出库存预警</a></li>
+                            <li><a class="dropdown-item" href="#">导出进销存记录</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 库存概览 -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-primary h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-box-seam fs-2 text-primary me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">商品总种类</div>
+                                        <div class="h5 mb-0 font-weight-bold" id="totalItems">32</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-success h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-currency-yen fs-2 text-success me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">库存总价值</div>
+                                        <div class="h5 mb-0 font-weight-bold" id="totalValue">￥12,580</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-info h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-arrow-down-circle fs-2 text-info me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">本月入库次数</div>
+                                        <div class="h5 mb-0 font-weight-bold" id="monthlyInCount">15次</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-warning h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-exclamation-triangle fs-2 text-warning me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">库存预警</div>
+                                        <div class="h5 mb-0 font-weight-bold" id="lowStockCount">5种</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 商品搜索和筛选 -->
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h6 class="m-0 font-weight-bold"><i class="bi bi-search me-2"></i>商品查询</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <div class="input-group">
+                                    <input type="text" id="searchInput" class="form-control" placeholder="商品名称/规格...">
+                                    <button class="btn btn-primary" type="button" id="searchBtn">
+                                        <i class="bi bi-search"></i> 搜索
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <select id="categoryFilter" class="form-select">
+                                    <option value="">所有类别</option>
+                                    <option value="推拿用品">推拿用品</option>
+                                    <option value="艾灸用品">艾灸用品</option>
+                                    <option value="刮痧用品">刮痧用品</option>
+                                    <option value="药品">药品</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-3 mb-md-0">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="lowStockFilter">
+                                    <label class="form-check-label" for="lowStockFilter">只显示低库存</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2 text-md-end">
+                                <button type="button" class="btn btn-outline-secondary" id="resetFilterBtn">
+                                    <i class="bi bi-arrow-counterclockwise"></i> 重置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 库存预警提示 -->
+                <div class="card mb-4" id="lowStockAlert">
+                    <div class="card-header bg-warning text-dark">
+                        <h6 class="m-0 font-weight-bold"><i class="bi bi-exclamation-circle me-2"></i>库存预警</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="lowStockTable" class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>商品名称</th>
+                                        <th>规格</th>
+                                        <th>当前库存</th>
+                                        <th>预警阈值</th>
+                                        <th>建议采购数量</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- 数据将由JavaScript动态加载 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 商品库存列表 -->
+                <ul class="nav nav-tabs mb-3" id="inventoryTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="inventory-tab" data-bs-toggle="tab" data-bs-target="#inventory-tab-pane" type="button" role="tab" aria-controls="inventory-tab-pane" aria-selected="true">商品库存</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="inout-tab" data-bs-toggle="tab" data-bs-target="#inout-tab-pane" type="button" role="tab" aria-controls="inout-tab-pane" aria-selected="false">进销存记录</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="purchase-tab" data-bs-toggle="tab" data-bs-target="#purchase-tab-pane" type="button" role="tab" aria-controls="purchase-tab-pane" aria-selected="false">采购单管理</button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="inventoryTabContent">
+                    <!-- 商品库存标签页 -->
+                    <div class="tab-pane fade show active" id="inventory-tab-pane" role="tabpanel" aria-labelledby="inventory-tab" tabindex="0">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div id="inventoryEmptyMessage" class="alert alert-info text-center d-none">
+                                        <i class="bi bi-info-circle me-2"></i> 没有库存商品记录，请添加商品
+                                    </div>
+                                    <table id="inventoryTable" class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>商品名称</th>
+                                                <th>规格</th>
+                                                <th>商品类别</th>
+                                                <th>当前库存</th>
+                                                <th>成本价</th>
+                                                <th>售价</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- 数据将由JavaScript动态加载 -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 进销存记录标签页 -->
+                    <div class="tab-pane fade" id="inout-tab-pane" role="tabpanel" aria-labelledby="inout-tab" tabindex="0">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="dateRangePicker" placeholder="选择日期范围">
+                                            <button class="btn btn-outline-secondary" type="button" id="applyDateBtn">应用</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="btn-group w-100">
+                                            <button type="button" class="btn btn-outline-secondary active">全部</button>
+                                            <button type="button" class="btn btn-outline-success">入库</button>
+                                            <button type="button" class="btn btn-outline-warning">出库</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="inoutTable" class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>操作日期</th>
+                                                <th>操作类型</th>
+                                                <th>商品名称</th>
+                                                <th>规格</th>
+                                                <th>数量</th>
+                                                <th>单价</th>
+                                                <th>金额</th>
+                                                <th>操作员</th>
+                                                <th>备注</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>2023-03-08 09:15</td>
+                                                <td><span class="badge bg-success">入库</span></td>
+                                                <td>按摩垫</td>
+                                                <td>儿童型</td>
+                                                <td>5</td>
+                                                <td>¥45</td>
+                                                <td>¥225</td>
+                                                <td>管理员</td>
+                                                <td>常规采购</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2023-03-07 16:30</td>
+                                                <td><span class="badge bg-warning text-dark">出库</span></td>
+                                                <td>清热贴</td>
+                                                <td>6贴/盒</td>
+                                                <td>2</td>
+                                                <td>¥20</td>
+                                                <td>¥40</td>
+                                                <td>张医师</td>
+                                                <td>门店销售</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2023-03-07 14:20</td>
+                                                <td><span class="badge bg-warning text-dark">出库</span></td>
+                                                <td>推拿油</td>
+                                                <td>100ml/瓶</td>
+                                                <td>1</td>
+                                                <td>¥45</td>
+                                                <td>¥45</td>
+                                                <td>李医师</td>
+                                                <td>门店销售</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2023-03-05 10:45</td>
+                                                <td><span class="badge bg-success">入库</span></td>
+                                                <td>足浴盆</td>
+                                                <td>标准型</td>
+                                                <td>3</td>
+                                                <td>¥85</td>
+                                                <td>¥255</td>
+                                                <td>管理员</td>
+                                                <td>常规采购</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2023-03-05 10:45</td>
+                                                <td><span class="badge bg-success">入库</span></td>
+                                                <td>小儿推拿图解</td>
+                                                <td>标准版</td>
+                                                <td>5</td>
+                                                <td>¥35</td>
+                                                <td>¥175</td>
+                                                <td>管理员</td>
+                                                <td>常规采购</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2023-03-04 15:10</td>
+                                                <td><span class="badge bg-warning text-dark">出库</span></td>
+                                                <td>艾条</td>
+                                                <td>10根/盒</td>
+                                                <td>3</td>
+                                                <td>¥25</td>
+                                                <td>¥75</td>
+                                                <td>王医师</td>
+                                                <td>门店销售</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2023-03-03 11:25</td>
+                                                <td><span class="badge bg-warning text-dark">出库</span></td>
+                                                <td>刮痧板</td>
+                                                <td>儿童型</td>
+                                                <td>1</td>
+                                                <td>¥35</td>
+                                                <td>¥35</td>
+                                                <td>张医师</td>
+                                                <td>门店销售</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 采购单管理标签页 -->
+                    <div class="tab-pane fade" id="purchase-tab-pane" role="tabpanel" aria-labelledby="purchase-tab" tabindex="0">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-end mb-3">
+                                    <button class="btn btn-primary">
+                                        <i class="bi bi-plus-circle me-1"></i> 新建采购单
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="purchaseTable" class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>采购单号</th>
+                                                <th>创建日期</th>
+                                                <th>商品种类</th>
+                                                <th>总金额</th>
+                                                <th>供应商</th>
+                                                <th>状态</th>
+                                                <th>操作员</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>PO202303001</td>
+                                                <td>2023-03-08</td>
+                                                <td>5</td>
+                                                <td>¥850</td>
+                                                <td>健康医疗用品有限公司</td>
+                                                <td><span class="badge bg-warning text-dark">待审核</span></td>
+                                                <td>管理员</td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="purchase-detail.html?id=PO202303001" class="btn btn-outline-primary">查看</a>
+                                                        <button type="button" class="btn btn-outline-success">审核</button>
+                                                        <button type="button" class="btn btn-outline-secondary">打印</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>PO202303002</td>
+                                                <td>2023-03-05</td>
+                                                <td>3</td>
+                                                <td>¥430</td>
+                                                <td>中医药材批发中心</td>
+                                                <td><span class="badge bg-info">已审核</span></td>
+                                                <td>管理员</td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="purchase-detail.html?id=PO202303002" class="btn btn-outline-primary">查看</a>
+                                                        <button type="button" class="btn btn-outline-success">完成</button>
+                                                        <button type="button" class="btn btn-outline-secondary">打印</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>PO202302005</td>
+                                                <td>2023-02-28</td>
+                                                <td>7</td>
+                                                <td>¥1,250</td>
+                                                <td>健康医疗用品有限公司</td>
+                                                <td><span class="badge bg-success">已完成</span></td>
+                                                <td>管理员</td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="purchase-detail.html?id=PO202302005" class="btn btn-outline-primary">查看</a>
+                                                        <button type="button" class="btn btn-outline-secondary">打印</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>PO202302004</td>
+                                                <td>2023-02-20</td>
+                                                <td>4</td>
+                                                <td>¥780</td>
+                                                <td>中医药材批发中心</td>
+                                                <td><span class="badge bg-success">已完成</span></td>
+                                                <td>管理员</td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="purchase-detail.html?id=PO202302004" class="btn btn-outline-primary">查看</a>
+                                                        <button type="button" class="btn btn-outline-secondary">打印</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 入库弹窗 -->
+    <div class="modal fade" id="stockInModal" tabindex="-1" aria-labelledby="stockInModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="stockInModalLabel">商品入库</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="stockInForm">
+                        <div class="mb-3">
+                            <label for="productNameIn" class="form-label">商品名称</label>
+                            <input type="text" class="form-control" id="productNameIn" readonly>
+                            <input type="hidden" id="productIdIn">
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockInQuantity" class="form-label">入库数量</label>
+                            <input type="number" class="form-control" id="stockInQuantity" min="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockInPrice" class="form-label">入库单价</label>
+                            <div class="input-group">
+                                <span class="input-group-text">¥</span>
+                                <input type="number" class="form-control" id="stockInPrice" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockInSupplier" class="form-label">供应商</label>
+                            <input type="text" class="form-control" id="stockInSupplier">
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockInNotes" class="form-label">备注</label>
+                            <textarea class="form-control" id="stockInNotes" rows="2" placeholder="可选：添加入库备注信息"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveStockIn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 出库弹窗 -->
+    <div class="modal fade" id="stockOutModal" tabindex="-1" aria-labelledby="stockOutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="stockOutModalLabel">商品出库</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="stockOutForm">
+                        <div class="mb-3">
+                            <label for="productNameOut" class="form-label">商品名称</label>
+                            <input type="text" class="form-control" id="productNameOut" readonly>
+                            <input type="hidden" id="productIdOut">
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockOutQuantity" class="form-label">出库数量</label>
+                            <input type="number" class="form-control" id="stockOutQuantity" min="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockOutReason" class="form-label">出库原因</label>
+                            <select class="form-select" id="stockOutReason">
+                                <option value="销售">销售</option>
+                                <option value="损耗">损耗</option>
+                                <option value="过期">过期</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stockOutNotes" class="form-label">备注</label>
+                            <textarea class="form-control" id="stockOutNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveStockOut">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast消息容器 -->
+    <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+    <!-- 加载状态指示器 -->
+    <div id="loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: none; z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+        <div class="spinner-border text-primary mb-3" role="status">
+            <span class="visually-hidden">加载中...</span>
+        </div>
+        <div>加载中，请稍候...</div>
+    </div>
+
+    <script>
+    document.getElementById('saveStockIn').addEventListener('click', function() {
+        const form = document.getElementById('stockInForm');
+        const productName = form.elements['productNameIn'].value;
+        const quantity = form.elements['stockInQuantity'].value;
+        const price = form.elements['stockInPrice'].value;
+        const supplier = form.elements['stockInSupplier'].value;
+        const notes = form.elements['stockInNotes'].value;
+
+        // 这里需要将数据发送到服务器进行处理
+        console.log('商品名称:', productName);
+        console.log('入库数量:', quantity);
+        console.log('入库单价:', price);
+        console.log('供应商:', supplier);
+        console.log('备注:', notes);
+
+        // 关闭弹窗
+        const modal = bootstrap.Modal.getInstance(document.getElementById('stockInModal'));
+        modal.hide();
+    });
+    </script>
+
+    <!-- JS依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net@1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.min.js"></script>
+    <script type="module" src="js/modules/inventory/inventory-list.js"></script>
+</body>
+</html> 

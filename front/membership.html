@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员办卡系统 - 中医小儿推拿管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.6/css/dataTables.bootstrap5.min.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer.html">
+                                <i class="bi bi-people me-2"></i>客户档案管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="membership.html">
+                                <i class="bi bi-credit-card me-2"></i>会员办卡系统
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <i class="bi bi-journal-text me-2"></i>服务记录模块
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="bi bi-gear me-2"></i>系统设置
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">会员办卡系统</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a href="membership-add.html" class="btn btn-sm btn-primary me-2">
+                            <i class="bi bi-credit-card-2-front-fill me-1"></i> 办理新卡
+                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-filter me-1"></i> 筛选
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">全部会员卡</a></li>
+                            <li><a class="dropdown-item" href="#">有效会员卡</a></li>
+                            <li><a class="dropdown-item" href="#">即将到期</a></li>
+                            <li><a class="dropdown-item" href="#">已过期</a></li>
+                            <li><a class="dropdown-item" href="#">次数不足</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 会员卡概览 -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-primary h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-credit-card-2-front fs-2 text-primary me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">总会员卡数</div>
+                                        <div class="h5 mb-0 font-weight-bold" data-stat="totalCount">0张</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-success h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-check-circle fs-2 text-success me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">有效会员卡</div>
+                                        <div class="h5 mb-0 font-weight-bold" data-stat="activeCount">0张</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-warning h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-exclamation-triangle fs-2 text-warning me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">即将到期</div>
+                                        <div class="h5 mb-0 font-weight-bold" data-stat="expiringCount">0张</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-danger h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-x-circle fs-2 text-danger me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">已过期</div>
+                                        <div class="h5 mb-0 font-weight-bold" data-stat="expiredCount">0张</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 会员卡类型分布 -->
+                <div class="row mb-4">
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold">会员卡类型分布</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="cardTypeChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold">近期办卡趋势</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="cardTrendChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 提醒区 -->
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h6 class="m-0 font-weight-bold"><i class="bi bi-bell me-2"></i>会员卡提醒</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group" id="remindersList">
+                            <li class="list-group-item text-center">正在加载提醒信息...</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="membership-expiring.html" class="text-decoration-none">查看所有提醒 <i class="bi bi-arrow-right-short"></i></a>
+                    </div>
+                </div>
+
+                <!-- 会员卡列表 -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="membershipTable" class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>卡号</th>
+                                        <th>客户姓名</th>
+                                        <th>卡类型</th>
+                                        <th>办卡日期</th>
+                                        <th>到期日期</th>
+                                        <th>剩余次数</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>MK202308001</td>
+                                        <td><a href="customer-detail.html?id=1">王小明</a></td>
+                                        <td>次卡</td>
+                                        <td>2023-08-01</td>
+                                        <td>2023-12-31</td>
+                                        <td>8次</td>
+                                        <td><span class="badge bg-success">有效</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="membership-detail.html?id=1" class="btn btn-outline-primary">查看</a>
+                                                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="visually-hidden">更多</span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="membership-edit.html?id=1">编辑</a></li>
+                                                    <li><a class="dropdown-item" href="membership-renew.html?id=1">续费</a></li>
+                                                    <li><a class="dropdown-item" href="membership-consume.html?id=1">消费</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#cancelCardModal" data-card-id="1" data-card-name="王小明的次卡">作废</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>MK202307005</td>
+                                        <td><a href="customer-detail.html?id=2">赵小刚</a></td>
+                                        <td>次卡</td>
+                                        <td>2023-07-15</td>
+                                        <td>2023-10-14</td>
+                                        <td>2次</td>
+                                        <td><span class="badge bg-warning text-dark">即将到期</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="membership-detail.html?id=2" class="btn btn-outline-primary">查看</a>
+                                                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="visually-hidden">更多</span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="membership-edit.html?id=2">编辑</a></li>
+                                                    <li><a class="dropdown-item" href="membership-renew.html?id=2">续费</a></li>
+                                                    <li><a class="dropdown-item" href="membership-consume.html?id=2">消费</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#cancelCardModal" data-card-id="2" data-card-name="赵小刚的次卡">作废</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>MK202308010</td>
+                                        <td><a href="customer-detail.html?id=3">李小丽</a></td>
+                                        <td>期限卡</td>
+                                        <td>2023-08-10</td>
+                                        <td>2024-02-09</td>
+                                        <td>不限</td>
+                                        <td><span class="badge bg-success">有效</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="membership-detail.html?id=3" class="btn btn-outline-primary">查看</a>
+                                                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="visually-hidden">更多</span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="membership-edit.html?id=3">编辑</a></li>
+                                                    <li><a class="dropdown-item" href="membership-renew.html?id=3">续费</a></li>
+                                                    <li><a class="dropdown-item" href="membership-consume.html?id=3">消费</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#cancelCardModal" data-card-id="3" data-card-name="李小丽的期限卡">作废</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>MK202306003</td>
+                                        <td><a href="customer-detail.html?id=4">张小芳</a></td>
+                                        <td>混合卡</td>
+                                        <td>2023-06-05</td>
+                                        <td>2023-12-04</td>
+                                        <td>5次</td>
+                                        <td><span class="badge bg-success">有效</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="membership-detail.html?id=4" class="btn btn-outline-primary">查看</a>
+                                                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="visually-hidden">更多</span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="membership-edit.html?id=4">编辑</a></li>
+                                                    <li><a class="dropdown-item" href="membership-renew.html?id=4">续费</a></li>
+                                                    <li><a class="dropdown-item" href="membership-consume.html?id=4">消费</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#cancelCardModal" data-card-id="4" data-card-name="张小芳的混合卡">作废</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>MK202302001</td>
+                                        <td><a href="customer-detail.html?id=5">陈小龙</a></td>
+                                        <td>次卡</td>
+                                        <td>2023-02-10</td>
+                                        <td>2023-08-09</td>
+                                        <td>0次</td>
+                                        <td><span class="badge bg-danger">已过期</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="membership-detail.html?id=5" class="btn btn-outline-primary">查看</a>
+                                                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="visually-hidden">更多</span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="membership-renew.html?id=5">续费</a></li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#cancelCardModal" data-card-id="5" data-card-name="陈小龙的次卡">作废</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 会员卡作废确认弹窗 -->
+    <div class="modal fade" id="cancelCardModal" tabindex="-1" aria-labelledby="cancelCardModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelCardModalLabel">确认作废会员卡</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>您确定要作废 <span id="cancelCardName" class="fw-bold"></span> 吗？</p>
+                    <p class="text-danger">作废后该卡将无法使用，且不可恢复。</p>
+                    <div class="mb-3">
+                        <label for="cancelReason" class="form-label">作废原因：</label>
+                        <select class="form-select" id="cancelReason">
+                            <option>客户要求退卡</option>
+                            <option>卡片丢失补办</option>
+                            <option>系统录入错误</option>
+                            <option>其他原因</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cancelNote" class="form-label">备注说明：</label>
+                        <textarea class="form-control" id="cancelNote" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" id="confirmCancelBtn">确认作废</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载状态指示器 -->
+    <div id="loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: none; z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+        <div class="spinner-border text-primary mb-3" role="status">
+            <span class="visually-hidden">加载中...</span>
+        </div>
+        <div>加载中，请稍候...</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net@1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="js/main.js"></script>
+    <script type="module" src="js/modules/membership/membership-list.js"></script>
+</body>
+</html> 

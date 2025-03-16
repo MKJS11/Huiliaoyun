@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置 - 医院管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer.html">
+                                <i class="bi bi-people me-2"></i>客户档案管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="membership.html">
+                                <i class="bi bi-credit-card me-2"></i>会员办卡系统
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <i class="bi bi-journal-text me-2"></i>服务记录模块
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="settings.html">
+                                <i class="bi bi-gear me-2"></i>系统设置
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主要内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">系统设置</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle"></i> 管理员
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="#">个人信息</a></li>
+                                <li><a class="dropdown-item" href="#">修改密码</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">退出登录</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 选项卡导航 -->
+                <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="service-tab" data-bs-toggle="tab" href="#service-settings" role="tab" aria-controls="service-settings" aria-selected="true">
+                            服务项目设置
+                        </a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="membership-tab" data-bs-toggle="tab" href="#membership-settings" role="tab" aria-controls="membership-settings" aria-selected="false">
+                            会员卡设置
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- 选项卡内容 -->
+                <div class="tab-content" id="settingsTabsContent">
+                    <!-- 服务项目设置 -->
+                    <div class="tab-pane fade show active" id="service-settings" role="tabpanel" aria-labelledby="service-tab">
+                        <div class="card mt-3">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">服务项目列表</h5>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addServiceItemModal">
+                                    <i class="bi bi-plus-lg"></i> 添加项目
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover" id="serviceItemsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>项目名称</th>
+                                                <th>价格（元）</th>
+                                                <th>描述</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="serviceItemsList">
+                                            <!-- 服务项目列表将通过JavaScript加载 -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 会员卡设置 -->
+                    <div class="tab-pane fade" id="membership-settings" role="tabpanel" aria-labelledby="membership-tab">
+                        <div class="card mt-3">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">会员卡类型设置</h5>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addCardTypeModal">
+                                    <i class="bi bi-plus-lg"></i> 添加卡类型
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover" id="cardTypesTable">
+                                        <thead>
+                                            <tr>
+                                                <th>卡类型名称</th>
+                                                <th>卡类型</th>
+                                                <th>价格（元）</th>
+                                                <th>包含服务次数</th>
+                                                <th>有效期（天）</th>
+                                                <th>操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="cardTypesList">
+                                            <!-- 会员卡类型列表将通过JavaScript加载 -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 添加服务项目模态框 -->
+    <div class="modal fade" id="addServiceItemModal" tabindex="-1" aria-labelledby="addServiceItemModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addServiceItemModalLabel">添加服务项目</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addServiceItemForm">
+                        <div class="form-group">
+                            <label for="serviceItemName">项目名称</label>
+                            <input type="text" class="form-control" id="serviceItemName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceItemPrice">价格（元）</label>
+                            <input type="number" class="form-control" id="serviceItemPrice" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceItemDescription">描述</label>
+                            <textarea class="form-control" id="serviceItemDescription" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveServiceItemBtn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑服务项目模态框 -->
+    <div class="modal fade" id="editServiceItemModal" tabindex="-1" aria-labelledby="editServiceItemModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editServiceItemModalLabel">编辑服务项目</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editServiceItemForm">
+                        <input type="hidden" id="editServiceItemId">
+                        <div class="form-group">
+                            <label for="editServiceItemName">项目名称</label>
+                            <input type="text" class="form-control" id="editServiceItemName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editServiceItemPrice">价格（元）</label>
+                            <input type="number" class="form-control" id="editServiceItemPrice" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editServiceItemDescription">描述</label>
+                            <textarea class="form-control" id="editServiceItemDescription" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="updateServiceItemBtn">更新</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加会员卡类型模态框 -->
+    <div class="modal fade" id="addCardTypeModal" tabindex="-1" aria-labelledby="addCardTypeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCardTypeModalLabel">添加会员卡类型</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCardTypeForm">
+                        <div class="form-group">
+                            <label for="cardTypeName">卡类型名称</label>
+                            <input type="text" class="form-control" id="cardTypeName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardTypeCategory">卡类型</label>
+                            <select class="form-control" id="cardTypeCategory" required>
+                                <option value="">请选择...</option>
+                                <option value="value">储值卡</option>
+                                <option value="count">次卡</option>
+                                <option value="period">期限卡</option>
+                                <option value="mixed">混合卡</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardTypePrice">价格（元）</label>
+                            <input type="number" class="form-control" id="cardTypePrice" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group" id="valueAmountGroup">
+                            <label for="valueAmount">储值金额（元）</label>
+                            <input type="number" class="form-control" id="valueAmount" min="0" step="0.01">
+                        </div>
+                        <div class="form-group" id="serviceCountGroup">
+                            <label for="serviceCount">包含服务次数</label>
+                            <input type="number" class="form-control" id="serviceCount" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="validityDays">有效期（天）</label>
+                            <input type="number" class="form-control" id="validityDays" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardTypeDescription">描述</label>
+                            <textarea class="form-control" id="cardTypeDescription" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveCardTypeBtn">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑会员卡类型模态框 -->
+    <div class="modal fade" id="editCardTypeModal" tabindex="-1" aria-labelledby="editCardTypeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCardTypeModalLabel">编辑会员卡类型</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCardTypeForm">
+                        <input type="hidden" id="editCardTypeId">
+                        <div class="form-group">
+                            <label for="editCardTypeName">卡类型名称</label>
+                            <input type="text" class="form-control" id="editCardTypeName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCardTypeCategory">卡类型</label>
+                            <select class="form-control" id="editCardTypeCategory" required>
+                                <option value="value">储值卡</option>
+                                <option value="count">次卡</option>
+                                <option value="period">期限卡</option>
+                                <option value="mixed">混合卡</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCardTypePrice">价格（元）</label>
+                            <input type="number" class="form-control" id="editCardTypePrice" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group" id="editValueAmountGroup">
+                            <label for="editValueAmount">储值金额（元）</label>
+                            <input type="number" class="form-control" id="editValueAmount" min="0" step="0.01">
+                        </div>
+                        <div class="form-group" id="editServiceCountGroup">
+                            <label for="editServiceCount">包含服务次数</label>
+                            <input type="number" class="form-control" id="editServiceCount" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="editValidityDays">有效期（天）</label>
+                            <input type="number" class="form-control" id="editValidityDays" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editCardTypeDescription">描述</label>
+                            <textarea class="form-control" id="editCardTypeDescription" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="updateCardTypeBtn">更新</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 库 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/settings.js"></script>
+
+    <!-- Toast 容器 -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer"></div>
+</body>
+</html> 

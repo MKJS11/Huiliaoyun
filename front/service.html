@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务记录模块 - 中医小儿推拿管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.6/css/dataTables.bootstrap5.min.css">
+    <style>
+        /* 加载指示器样式 */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+        #loading .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* 卡片样式 */
+        .card.border-left-primary {
+            border-left: 0.25rem solid #4e73df !important;
+        }
+        .card.border-left-success {
+            border-left: 0.25rem solid #1cc88a !important;
+        }
+        .card.border-left-info {
+            border-left: 0.25rem solid #36b9cc !important;
+        }
+        .card.border-left-warning {
+            border-left: 0.25rem solid #f6c23e !important;
+        }
+        
+        /* 图表容器样式 */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        /* 确保Canvas元素正确显示 */
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+        
+        /* 图表加载指示器 */
+        .chart-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载指示器 -->
+    <div id="loading" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <div>加载中...</div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer.html">
+                                <i class="bi bi-people me-2"></i>客户档案管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="membership.html">
+                                <i class="bi bi-credit-card me-2"></i>会员办卡系统
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="service.html">
+                                <i class="bi bi-journal-text me-2"></i>服务记录模块
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="bi bi-gear me-2"></i>系统设置
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">服务记录模块</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a href="service-add.html" class="btn btn-sm btn-primary me-2">
+                            <i class="bi bi-plus-circle me-1"></i> 新增服务记录
+                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-calendar3 me-1"></i> 时间范围
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">今日服务</a></li>
+                            <li><a class="dropdown-item" href="#">本周服务</a></li>
+                            <li><a class="dropdown-item" href="#">本月服务</a></li>
+                            <li><a class="dropdown-item" href="#">自定义时间...</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 筛选表单 -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold">筛选条件</h6>
+                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+                            <i class="bi bi-funnel"></i> 展开/折叠
+                        </button>
+                    </div>
+                    <div class="collapse" id="filterCollapse">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label for="startDate" class="form-label">开始日期</label>
+                                    <input type="date" class="form-control service-filter" id="startDate" name="startDate">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="endDate" class="form-label">结束日期</label>
+                                    <input type="date" class="form-control service-filter" id="endDate" name="endDate">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="serviceType" class="form-label">服务类型</label>
+                                    <select class="form-select service-filter" id="serviceType" name="serviceType">
+                                        <option value="">全部类型</option>
+                                        <option value="小儿推拿">小儿推拿</option>
+                                        <option value="小儿推拿+艾灸">小儿推拿+艾灸</option>
+                                        <option value="小儿推拿+刮痧">小儿推拿+刮痧</option>
+                                        <option value="艾灸调理">艾灸调理</option>
+                                        <option value="其他">其他</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="therapist" class="form-label">推拿师</label>
+                                    <select class="form-select service-filter" id="therapist" name="therapist">
+                                        <option value="">全部推拿师</option>
+                                        <option value="张医师">张医师</option>
+                                        <option value="李医师">李医师</option>
+                                        <option value="王医师">王医师</option>
+                                        <option value="刘医师">刘医师</option>
+                                        <option value="陈医师">陈医师</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 text-end">
+                                    <button id="resetFiltersBtn" class="btn btn-outline-secondary me-2">
+                                        <i class="bi bi-arrow-counterclockwise me-1"></i> 重置
+                                    </button>
+                                    <button id="applyFiltersBtn" class="btn btn-primary">
+                                        <i class="bi bi-search me-1"></i> 筛选
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 服务概览统计 -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-primary h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-calendar-check fs-2 text-primary me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">今日服务数</div>
+                                        <div class="h5 mb-0 font-weight-bold">0人次</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-success h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-currency-yen fs-2 text-success me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">今日服务收入</div>
+                                        <div class="h5 mb-0 font-weight-bold">￥0</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-info h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-clock-history fs-2 text-info me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">本月累计服务</div>
+                                        <div class="h5 mb-0 font-weight-bold">0人次</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-warning h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-graph-up-arrow fs-2 text-warning me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">环比增长</div>
+                                        <div class="h5 mb-0 font-weight-bold">0%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 服务类型分布 -->
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold">服务类型分布</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="serviceTypeChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold">推拿师工作量</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="therapistWorkloadChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 服务记录列表 -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold">服务记录列表</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="serviceTable" class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>服务日期</th>
+                                        <th>服务时间</th>
+                                        <th>客户姓名</th>
+                                        <th>年龄</th>
+                                        <th>服务类型</th>
+                                        <th>推拿师</th>
+                                        <th>消费金额</th>
+                                        <th>支付方式</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- 这里的内容将由JavaScript动态生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 删除服务记录确认弹窗 -->
+    <div class="modal fade" id="deleteServiceModal" tabindex="-1" aria-labelledby="deleteServiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteServiceModalLabel">确认删除服务记录</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>您确定要删除该服务记录吗？</p>
+                    <p class="text-danger">此操作不可逆，删除后将无法恢复。</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">确认删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 提示框 -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto" id="toastTitle">提示</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastMessage"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 使用与membership.html相同的Chart.js版本 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+    <script>
+        // 简化的Chart.js加载检查
+        window.addEventListener('DOMContentLoaded', function() {
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js加载失败，显示备用内容');
+                document.querySelectorAll('.chart-container').forEach(function(container) {
+                    const canvas = container.querySelector('canvas');
+                    if (canvas) {
+                        canvas.style.display = 'none';
+                        
+                        // 添加错误消息
+                        const fallback = document.createElement('div');
+                        fallback.className = 'alert alert-warning';
+                        fallback.textContent = '图表加载失败，请刷新页面重试';
+                        container.appendChild(fallback);
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net@1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="js/main.js"></script>
+    <script type="module" src="js/modules/service/service-list.js"></script>
+</body>
+</html> 
