@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>利润统计 - 中医小儿推拿管理系统</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <img src="images/logo.png" alt="系统logo" class="img-fluid mb-3" style="max-width: 120px;">
+                        <h5>中医小儿推拿管理系统</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="bi bi-house-door me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="customer.html">
+                                <i class="bi bi-people me-2"></i>客户档案管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="membership.html">
+                                <i class="bi bi-credit-card me-2"></i>会员办卡系统
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="service.html">
+                                <i class="bi bi-journal-text me-2"></i>服务记录模块
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">
+                                <i class="bi bi-bar-chart me-2"></i>统计与数据分析
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="profit-statistics.html">
+                                <i class="bi bi-graph-up-arrow me-2"></i>利润统计
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="therapist.html">
+                                <i class="bi bi-person-badge me-2"></i>医师管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="inventory.html">
+                                <i class="bi bi-box-seam me-2"></i>库存管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html">
+                                <i class="bi bi-gear me-2"></i>系统设置
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">利润统计</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="input-group me-2">
+                            <input type="text" class="form-control form-control-sm" id="dateRangePicker" placeholder="选择日期范围">
+                            <button class="btn btn-sm btn-outline-secondary" type="button" id="applyDateBtn">应用</button>
+                        </div>
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary active">本月</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">上月</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">本季度</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">本年</button>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-download me-1"></i> 导出
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">导出Excel</a></li>
+                            <li><a class="dropdown-item" href="#">导出PDF</a></li>
+                            <li><a class="dropdown-item" href="#">导出图表</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 利润概览 -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-primary h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-currency-yen fs-2 text-primary me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">总收入</div>
+                                        <div class="h5 mb-0 font-weight-bold" id="totalRevenue">￥0</div>
+                                        <div class="text-xs text-success">本期统计</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-warning h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-cash-stack fs-2 text-warning me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">总成本</div>
+                                        <div class="h5 mb-0 font-weight-bold" id="totalCost">￥0</div>
+                                        <div class="text-xs text-danger">本期统计</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-success h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-graph-up-arrow fs-2 text-success me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">总利润</div>
+                                        <div class="h5 mb-0 font-weight-bold" id="totalProfit">￥0</div>
+                                        <div class="text-xs text-success">本期统计</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card border-left-info h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col-auto">
+                                        <i class="bi bi-percent fs-2 text-info me-3"></i>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-xs text-muted">平均利润率</div>
+                                        <div class="h5 mb-0 font-weight-bold" id="avgProfitRate">0%</div>
+                                        <div class="text-xs text-success">本期统计</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 利润趋势图 -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title">利润趋势</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height:350px;">
+                            <canvas id="profitTrendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 利润分析表格 -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">商品销售利润分析</h5>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="showOnlyProfitable">
+                                    <label class="form-check-label" for="showOnlyProfitable">只显示有利润的商品</label>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover" id="profitTable">
+                                        <thead>
+                                            <tr>
+                                                <th>商品名称</th>
+                                                <th>销售数量</th>
+                                                <th>单位成本</th>
+                                                <th>平均售价</th>
+                                                <th>总收入</th>
+                                                <th>总成本</th>
+                                                <th>总利润</th>
+                                                <th>利润率</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- 数据将通过JavaScript动态加载 -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 加载状态指示器 -->
+                <div id="loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: none; z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">加载中...</span>
+                    </div>
+                    <div>加载中，请稍候...</div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- JS依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net@1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script type="module" src="js/modules/statistics/profit-statistics.js"></script>
+</body>
+</html> 

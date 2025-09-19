@@ -559,6 +559,47 @@
         </div>
     </div>
 
+    <!-- 销售弹窗 -->
+    <div class="modal fade" id="sellItemModal" tabindex="-1" aria-labelledby="sellItemModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="sellItemModalLabel">商品销售</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="sellItemForm">
+                        <div class="mb-3">
+                            <label for="productNameSell" class="form-label">商品名称</label>
+                            <input type="text" class="form-control" id="productNameSell" readonly>
+                            <input type="hidden" id="productIdSell">
+                        </div>
+                        <div class="mb-3">
+                            <label for="sellQuantity" class="form-label">销售数量</label>
+                            <input type="number" class="form-control" id="sellQuantity" min="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sellPrice" class="form-label">销售单价</label>
+                            <div class="input-group">
+                                <span class="input-group-text">¥</span>
+                                <input type="number" class="form-control" id="sellPrice" step="0.01" min="0" required>
+                            </div>
+                            <small class="form-text text-muted">留空则使用默认售价</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="sellNotes" class="form-label">备注</label>
+                            <textarea class="form-control" id="sellNotes" rows="2" placeholder="可选：添加销售备注信息"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="saveSellItem">完成销售</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast消息容器 -->
     <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
 

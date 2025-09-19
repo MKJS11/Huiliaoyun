@@ -8,6 +8,7 @@ const {
   deleteInventoryItem,
   stockIn,
   stockOut,
+  sellItem,
   getTransactions,
   getInventoryStats
 } = require('../controllers/inventory');
@@ -38,5 +39,8 @@ router.post('/:id/stock-in', stockIn);
 
 // 出库操作
 router.post('/:id/stock-out', stockOut);
+
+// 销售操作
+router.post('/:id/sell', sellItem);
 
 module.exports = router; 

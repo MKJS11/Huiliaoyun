@@ -1,0 +1,101 @@
+# 依赖文件
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 环境变量文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 系统文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志文件
+logs/
+*.log
+
+# 运行时文件
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# 覆盖率报告
+coverage/
+.nyc_output/
+
+# 构建输出
+dist/
+build/
+
+# 临时文件
+tmp/
+temp/
+
+# 上传文件
+uploads/
+*.tmp
+
+# 私钥文件
+*.pem
+*.key
+*.p12
+*.pfx
+
+# 数据库文件
+*.sqlite
+*.db
+
+# 备份文件
+*.bak
+*.backup
+
+# 压缩文件
+*.zip
+*.tar.gz
+*.rar
+
+# IDE配置
+.project
+.classpath
+.settings/
+
+# macOS
+*.dSYM/
+.AppleDouble
+.LSOverride
+
+# Windows
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# 项目特定排除
+instruction.md
+huiliaoyun.pem
+指令.md

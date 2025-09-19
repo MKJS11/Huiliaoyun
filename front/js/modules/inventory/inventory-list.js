@@ -41,6 +41,15 @@ class InventoryList {
       }
     });
     
+    // 绑定销售按钮点击事件
+    document.addEventListener('click', (event) => {
+      if (event.target.classList.contains('sell-item-btn')) {
+        const itemId = event.target.dataset.id;
+        const itemName = event.target.dataset.name;
+        this.showSellItemModal(itemId, itemName);
+      }
+    });
+    
     // 绑定删除按钮点击事件
     document.addEventListener('click', (event) => {
       if (event.target.classList.contains('delete-item-btn')) {
@@ -58,6 +67,11 @@ class InventoryList {
     // 保存出库信息按钮点击事件
     document.getElementById('saveStockOut').addEventListener('click', () => {
       this.handleStockOut();
+    });
+    
+    // 保存销售信息按钮点击事件
+    document.getElementById('saveSellItem').addEventListener('click', () => {
+      this.handleSellItem();
     });
     
     // 搜索按钮点击事件
@@ -186,6 +200,9 @@ class InventoryList {
                 </button>
                 <button class="btn btn-outline-warning stock-out-btn" data-id="${row._id}" data-name="${row.name}">
                   <i class="bi bi-box-arrow-up"></i> 出库
+                </button>
+                <button class="btn btn-outline-success sell-item-btn" data-id="${row._id}" data-name="${row.name}">
+                  <i class="bi bi-currency-yen"></i> 销售
                 </button>
                 <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                   <span class="visually-hidden">更多</span>
@@ -512,6 +529,36 @@ class InventoryList {
   }
   
   /**
+   * 显示销售弹窗
+   * @param {string} itemId 商品ID
+   * @param {string} itemName 商品名称
+   */
+  showSellItemModal(itemId, itemName) {
+    document.getElementById('productNameSell').value = itemName;
+    document.getElementById('productIdSell').value = itemId;
+    
+    // 清空输入框
+    document.getElementById('sellQuantity').value = 1;
+    document.getElementById('sellPrice').value = '';
+    document.getElementById('sellNotes').value = '';
+    
+    // 获取商品详情以设置默认售价
+    this.dataService.getInventoryItemById(itemId)
+      .then(item => {
+        if (item) {
+          document.getElementById('sellPrice').value = item.sellingPrice;
+        }
+      })
+      .catch(error => {
+        console.error('获取商品详情失败:', error);
+      });
+    
+    // 显示弹窗
+    const sellModal = new bootstrap.Modal(document.getElementById('sellItemModal'));
+    sellModal.show();
+  }
+  
+  /**
    * 确认删除商品
    */
   confirmDeleteItem(itemId, itemName) {
@@ -659,6 +706,71 @@ class InventoryList {
         this.showToast('出库失败', error.message || '服务器错误，请稍后重试', 'error');
       }
       
+      this.hideLoading();
+    }
+  }
+  
+  /**
+   * 处理商品销售
+   */
+  async handleSellItem() {
+    try {
+      this.showLoading();
+      
+      // 获取表单数据
+      const form = document.getElementById('sellItemForm');
+      const itemId = document.getElementById('productIdSell').value;
+      const itemName = document.getElementById('productNameSell').value;
+      const quantity = parseInt(document.getElementById('sellQuantity').value);
+      const actualPrice = parseFloat(document.getElementById('sellPrice').value);
+      const notes = document.getElementById('sellNotes').value;
+      
+      // 数据验证
+      if (!itemId) {
+        this.showToast('错误', '商品ID不能为空', 'error');
+        this.hideLoading();
+        return;
+      }
+      
+      if (!quantity || quantity <= 0) {
+        this.showToast('错误', '销售数量必须大于0', 'error');
+        this.hideLoading();
+        return;
+      }
+      
+      if (!actualPrice || actualPrice <= 0) {
+        this.showToast('错误', '销售价格必须大于0', 'error');
+        this.hideLoading();
+        return;
+      }
+      
+      // 调用API进行销售操作
+      const data = {
+        quantity,
+        actualPrice,
+        notes,
+        operator: '当前用户' // 应当从登录信息获取实际操作员
+      };
+      
+      const result = await this.dataService.sellInventoryItem(itemId, data);
+      
+      if (result && result.success) {
+        // 关闭弹窗
+        const modal = bootstrap.Modal.getInstance(document.getElementById('sellItemModal'));
+        modal.hide();
+        
+        // 显示成功消息
+        this.showToast('成功', `商品 ${itemName} 销售成功`, 'success');
+        
+        // 刷新数据
+        this.refreshData();
+      } else {
+        this.showToast('错误', result.message || '销售操作失败', 'error');
+      }
+    } catch (error) {
+      console.error('销售操作失败:', error);
+      this.showToast('错误', error.message || '销售操作失败', 'error');
+    } finally {
       this.hideLoading();
     }
   }

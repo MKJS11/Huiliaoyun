@@ -472,6 +472,33 @@ exports.getInventoryStats = async (req, res) => {
       }
     });
     
+    // 获取本月销售数据
+    const monthlySalesCount = await InventoryTransaction.countDocuments({
+      type: '销售',
+      transactionDate: {
+        $gte: firstDayOfMonth,
+        $lte: lastDayOfMonth
+      }
+    });
+    
+    // 获取本月销售总额
+    const monthlySalesTransactions = await InventoryTransaction.find({
+      type: '销售',
+      transactionDate: {
+        $gte: firstDayOfMonth,
+        $lte: lastDayOfMonth
+      }
+    });
+    
+    const monthlySalesAmount = monthlySalesTransactions.reduce((total, transaction) => {
+      return total + transaction.totalPrice;
+    }, 0);
+    
+    // 获取本月销售利润
+    const monthlySalesProfit = monthlySalesTransactions.reduce((total, transaction) => {
+      return total + transaction.profit;
+    }, 0);
+    
     // 返回统计数据
     res.json({
       success: true,
@@ -480,7 +507,10 @@ exports.getInventoryStats = async (req, res) => {
         totalValue,
         lowStockCount,
         monthlyInCount,
-        monthlyOutCount
+        monthlyOutCount,
+        monthlySalesCount,
+        monthlySalesAmount,
+        monthlySalesProfit
       }
     });
   } catch (err) {
@@ -488,6 +518,90 @@ exports.getInventoryStats = async (req, res) => {
     res.status(500).json({
       success: false,
       message: '服务器错误，无法获取库存统计信息'
+    });
+  }
+};
+
+/**
+ * @desc 商品销售
+ * @route POST /api/inventory/:id/sell
+ * @access 私有
+ */
+exports.sellItem = async (req, res) => {
+  try {
+    const { quantity, actualPrice, notes, operator, customer } = req.body;
+    
+    if (!quantity || quantity <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: '请提供有效的销售数量'
+      });
+    }
+    
+    const item = await Inventory.findById(req.params.id);
+    
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: '找不到该商品'
+      });
+    }
+    
+    // 检查库存是否充足
+    if (item.stock < quantity) {
+      return res.status(400).json({
+        success: false,
+        message: '库存不足，无法完成销售操作'
+      });
+    }
+    
+    // 使用实际售价或默认售价
+    const sellingPrice = actualPrice || item.sellingPrice;
+    
+    // 计算销售利润
+    const profit = (sellingPrice - item.costPrice) * quantity;
+    
+    // 更新库存
+    item.stock -= Number(quantity);
+    
+    // 保存更新后的商品信息
+    await item.save();
+    
+    // 创建销售记录
+    const transaction = await InventoryTransaction.create({
+      inventory: item._id,
+      type: '销售',
+      quantity,
+      unitPrice: sellingPrice,
+      totalPrice: sellingPrice * quantity,
+      profit: profit,
+      customer: customer || null,
+      notes: notes || '商品销售',
+      operator
+    });
+    
+    res.status(201).json({
+      success: true,
+      data: {
+        item,
+        transaction
+      }
+    });
+  } catch (err) {
+    console.error('商品销售失败:', err);
+    
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(val => val.message);
+      
+      return res.status(400).json({
+        success: false,
+        message: messages.join(', ')
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: '服务器错误，无法完成销售操作'
     });
   }
 }; 

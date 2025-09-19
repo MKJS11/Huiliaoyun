@@ -1705,6 +1705,64 @@ class DataService {
       };
     }
   }
+
+  /**
+   * 商品出库操作
+   * @param {string} id 商品ID
+   * @param {Object} data 出库数据
+   * @returns {Promise<Object>} 响应结果
+   */
+  async stockOutInventoryItem(id, data) {
+    try {
+      const response = await fetch(`${this.apiUrl}/inventory/${id}/stock-out`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(data)
+      });
+      
+      // 处理非2xx响应
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '操作失败');
+      }
+      
+      const result = await response.json();
+      
+      return result;
+    } catch (error) {
+      console.error('商品出库失败:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * 商品销售操作
+   * @param {string} id 商品ID
+   * @param {Object} data 销售数据
+   * @returns {Promise<Object>} 响应结果
+   */
+  async sellInventoryItem(id, data) {
+    try {
+      const response = await fetch(`${this.apiUrl}/inventory/${id}/sell`, {
+        method: 'POST',
+        headers: this.getHeaders(),
+        body: JSON.stringify(data)
+      });
+      
+      // 处理非2xx响应
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '销售失败');
+      }
+      
+      const result = await response.json();
+      
+      return result;
+    } catch (error) {
+      console.error('商品销售失败:', error);
+      throw error;
+    }
+  }
 }
 
 // 创建单例实例并暴露
